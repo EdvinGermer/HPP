@@ -1,0 +1,36 @@
+%%%%%%%%%%%%% Default %%%%%%%%%%%%%
+
+Doing 400 iterations with N=232 using apply_stencil function version 1 took   1.128 wall seconds.
+Doing 400 iterations with N=232 using apply_stencil function version 2 took   1.128 wall seconds.
+Doing 400 iterations with N=232 using apply_stencil function version 3 took   1.128 wall seconds.
+Checking correctness by comparing 1 and 2: max_abs_diff =        0
+Checking correctness by comparing 1 and 3: max_abs_diff =        0
+OK, results seem correct!
+
+
+
+
+%%%%%%%%%%%%% Optimizing apply_stencil_v2 %%%%%%%%%%%%%
+
+Doing 400 iterations with N=232 using apply_stencil function version 1 took   1.129 wall seconds.
+Doing 400 iterations with N=232 using apply_stencil function version 2 took   1.051 wall seconds.   7% improvment
+Doing 400 iterations with N=232 using apply_stencil function version 3 took   1.129 wall seconds.
+Checking correctness by comparing 1 and 2: max_abs_diff = 1.443e-15
+Checking correctness by comparing 1 and 3: max_abs_diff =        0
+
+
+
+%%%%%%%%%%%%% Changing STENCIL_SZ from 20 to 4 %%%%%%%%%%%%%
+
+Doing 400 iterations with N=200 using apply_stencil function version 1 took   0.086 wall seconds.
+Doing 400 iterations with N=200 using apply_stencil function version 2 took   0.085 wall seconds.
+Doing 400 iterations with N=200 using apply_stencil function version 3 took   0.086 wall seconds.
+Checking correctness by comparing 1 and 2: max_abs_diff = 7.772e-16
+Checking correctness by comparing 1 and 3: max_abs_diff =        0
+
+92% faster times  (is it faster because optimizer does more optimization for shorter loops?)
+Different value for N because N is a function of STENCIL_SC   (int N = 192 + 2*STENCIL_SZ;)
+
+
+By chaning STENCIL_SZ from 20 to 4 we can a huge increase in speed for all 3 versions.
+There is no difference if you do the loop fusion or not.

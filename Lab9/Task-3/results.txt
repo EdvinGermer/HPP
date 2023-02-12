@@ -1,0 +1,75 @@
+
+############### What is the difference of joinable and detached? ############### 
+
+In Pthreads, a joinable thread is a thread that can be joined by another thread using
+the "pthread_join" function. When a joinable thread terminates, its resources are not
+automatically freed and its exit status can be retrieved by another thread.
+
+On the other hand, a detached thread is a thread that cannot be joined by another thread.
+When a detached thread terminates, its resources are automatically freed and its exit
+status cannot be retrieved.
+
+The choice between a joinable or detached thread depends on the requirements of the application.
+If you want to wait for a thread to finish and retrieve its exit status, you should use a
+joinable thread. If you don't need to wait for the thread to finish or retrieve its exit
+status, you can use a detached thread to free up resources immediately when the thread terminates.
+
+
+
+
+############### Running program as is ############### 
+
+Main: creating thread 0
+Main: creating thread 1
+Thread 0 starting...
+Main: creating thread 2
+Thread 1 starting...
+Main: creating thread 3
+Thread 2 starting...
+Thread 3 starting...
+Thread 0 done. Result = 4.931540e+06
+Main: completed join with thread 0 having a status of 0
+Thread 1 done. Result = 4.931540e+06
+Main: completed join with thread 1 having a status of 1
+Thread 3 done. Result = 4.931540e+06
+Thread 2 done. Result = 4.931540e+06
+Main: completed join with thread 2 having a status of 2
+Main: completed join with thread 3 having a status of 3
+Main: program completed. Exiting.
+
+
+
+
+
+############### DETACHED and remove pthread_join() statements ############### 
+Main: creating thread 0
+Main: creating thread 1
+Thread 0 starting...
+Main: creating thread 2
+Thread 1 starting...
+Main: creating thread 3
+Thread 2 starting...
+Main: program completed. Exiting.
+Thread 3 starting...
+Thread 2 done. Result = 4.931540e+06
+Thread 1 done. Result = 4.931540e+06
+Thread 0 done. Result = 4.931540e+06
+Thread 3 done. Result = 4.931540e+06
+
+
+
+
+
+
+############### Also remove pthread_exit() ############### 
+
+
+Main: creating thread 0
+Main: creating thread 1
+Thread 0 starting...
+Main: creating thread 2
+Thread 1 starting...
+Main: creating thread 3
+Thread 2 starting...
+Main: program completed. Exiting.
+Thread 3 starting...

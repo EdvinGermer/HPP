@@ -1,0 +1,112 @@
+%%%%%%%%%%%%%%%%% Findings %%%%%%%%%%%%%%%%% 
+
+If I am searching for all primes in the intervall 1 -> 1000
+I am splitting the work straight down the evenly among the threads
+    2 threads:
+        1 thread counts primes in range 1 -> 500
+        2 thread counts primes in range 501 -> 1000
+    4 threads:
+        1 thread counts primes in range 1 -> 250
+        2 thread counts primes in range 251 -> 500
+        3 thread counts primes in range 501 -> 750
+        4 thread counts primes in range 750 -> 1000
+
+
+It is harder to check for primes (with my naive approach) when you check higher numbers
+As a result first few threads will finish way before the later ones.
+
+16 threads is the maxium possible threads that can work at once.
+But my algorithm continues to improve above 16. The reason for that is probably because the
+first threads finish early then they can start working on the later ones.
+
+Even up to 64 threads continus to give improved results
+
+
+
+
+%%%%%%%%%%%%%%%%% results with 1 thread %%%%%%%%%%%%%%%%% 
+
+Serial code:
+        Serial code took   2.080 wall seconds.
+        3245 primes in the range 1>30000
+
+Parallell code:
+        Parallell code took   2.070 wall seconds.
+        3245 primes in the range 1->30000
+
+
+
+%%%%%%%%%%%%%%%%% results with 2 thread %%%%%%%%%%%%%%%%% 
+
+Serial code:
+        Serial code took   2.080 wall seconds.
+        3245 primes in the range 1>30000
+
+Parallell code:
+        Parallell code took   1.563 wall seconds.
+        3245 primes in the range 1->30000
+
+
+%%%%%%%%%%%%%%%%% results with 4 thread %%%%%%%%%%%%%%%%% 
+
+Serial code:
+        Serial code took   2.079 wall seconds.
+        3245 primes in the range 1>30000
+
+Parallell code:
+        Parallell code took   0.916 wall seconds.
+        3245 primes in the range 1->30000
+
+
+
+
+%%%%%%%%%%%%%%%%% results with 8 thread %%%%%%%%%%%%%%%%% 
+
+Serial code:
+        Serial code took   2.080 wall seconds.
+        3245 primes in the range 1>30000
+
+Parallell code:
+        Parallell code took   0.496 wall seconds.
+        3245 primes in the range 1->30000
+
+
+
+
+
+%%%%%%%%%%%%%%%%% results with 16 thread %%%%%%%%%%%%%%%%% 
+
+Serial code:
+        Serial code took   2.080 wall seconds.
+        3245 primes in the range 1>30000
+
+Parallell code:
+        Parallell code took   0.355 wall seconds.
+        3245 primes in the range 1->30000
+
+
+
+
+
+%%%%%%%%%%%%%%%%% results with 32 thread %%%%%%%%%%%%%%%%% 
+
+Serial code:
+        Serial code took   2.081 wall seconds.
+        3245 primes in the range 1>30000
+
+Parallell code:
+        Parallell code took   0.304 wall seconds.
+        3245 primes in the range 1->30000
+
+
+
+
+%%%%%%%%%%%%%%%%% results with 64 thread %%%%%%%%%%%%%%%%% 
+
+Serial code:
+        Serial code took   2.081 wall seconds.
+        3245 primes in the range 1>30000
+
+Parallell code:
+        Parallell code took   0.286 wall seconds.    // 86% improvement
+        3245 primes in the range 1->30000

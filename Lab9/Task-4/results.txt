@@ -1,0 +1,111 @@
+############### Running synch.c as is ###############
+
+gcc -o synch synch.c -lpthread
+
+Hello World! 0
+Hello World! 1
+Hello World! 2
+Hello World! 3
+Hello World! 4
+Hello World! 5
+Hello World! 6
+Hello World! 7
+Bye Bye World! 7
+Bye Bye World! 1
+Bye Bye World! 5
+Bye Bye World! 0
+Bye Bye World! 2
+Bye Bye World! 6
+Bye Bye World! 4
+Bye Bye World! 3
+
+
+
+############### Running synch.c but removing barrier() ###############
+
+Every thread prints out "hello" and "bye bye" directly without waiting at barrier
+
+Hello World! 0
+Bye Bye World! 0
+Hello World! 1
+Bye Bye World! 1
+Hello World! 3
+Bye Bye World! 3
+Hello World! 4
+Bye Bye World! 4
+Hello World! 2
+Bye Bye World! 2
+Hello World! 5
+Bye Bye World! 5
+Hello World! 6
+Bye Bye World! 6
+Hello World! 7
+Bye Bye World! 7
+
+
+
+
+############### Running spinwait.c as is ###############
+
+gcc -o spinwait spinwait.c
+
+Hello World! 0
+Hello World! 1
+Hello World! 2
+Hello World! 3
+Hello World! 4
+Hello World! 5
+Hello World! 6
+Hello World! 7
+Bye Bye World! 1
+Bye Bye World! 0
+Bye Bye World! 4
+Bye Bye World! 3
+Bye Bye World! 6
+Bye Bye World! 7
+Bye Bye World! 2
+Bye Bye World! 5
+
+
+
+############### Running spinwait.c with -O3 flag ###############
+
+gcc -O3 -o spinwait spinwait.c
+
+compile is fine with when running it gets stuck
+
+Hello World! 0
+Hello World! 1
+Hello World! 3
+Hello World! 2
+Hello World! 4
+Hello World! 5
+Hello World! 6
+Hello World! 7
+Bye Bye World! 7
+...
+
+Due to compiling optimization the program gets stuck in the barrier function because 
+of the way that the "state" variable is updated.
+
+By adding the volatile keyword to the "state" variable this is fixed:
+The volatile keyword specify that the variable can be changed by external factors (other threads)
+
+Hello World! 0
+Hello World! 1
+Hello World! 2
+Hello World! 3
+Hello World! 4
+Hello World! 5
+Hello World! 6
+Hello World! 7
+Bye Bye World! 5
+Bye Bye World! 0
+Bye Bye World! 1
+Bye Bye World! 2
+Bye Bye World! 6
+Bye Bye World! 7
+Bye Bye World! 4
+Bye Bye World! 3
+
+

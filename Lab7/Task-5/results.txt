@@ -1,0 +1,28 @@
+%%%%%%%%%%%%%%%% Default %%%%%%%%%%%%%%%%
+
+a[i] are randomly distributed between 0 and 1
+
+f_std tests took   1.548 wall seconds.
+f_opt tests took   1.848 wall seconds.
+Checking correctness: abs_diff =        0
+OK, result seems correct.
+
+
+
+%%%%%%%%%%%%%%%% Change a[i] to be betwwen 0 and 0.5 %%%%%%%%%%%%%%%%
+
+f_std tests took   0.751 wall seconds.
+f_opt tests took   0.764 wall seconds.
+Checking correctness: abs_diff =        0
+OK, result seems correct.
+
+
+The code runs twice as fast when the two if statements are never entered and
+branch prediction can be used.
+
+
+
+When I completely removed the if statements in the previous task I got the following:
+    f_opt tests took   0.250 wall seconds.
+
+So the best option is still to remove the if statements.

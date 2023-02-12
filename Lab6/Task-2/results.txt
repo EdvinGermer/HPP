@@ -1,0 +1,29 @@
+
+%%%%%%%%%%% Why use typedef %%%%%%%%%%%
+What happens if you remove typefed infront of intType?
+    • error: unknown type name ‘intType’
+    • error: implicit declaration of function
+    • error: ‘intType’ undeclared 
+    • error: expected expression before ‘)’ token
+
+
+
+%%%%%%%%%%% Datatype effect on performance %%%%%%%%%%%
+
+long long: n = 10.000.000 -> 2.071 wall seconds
+long int:  n = 10.000.000 -> 2.083 wall seconds
+int:       n = 10.000.000 -> 1.893 wall seconds
+short int: n = 10.000.000 -> 1.818 wall seconds
+char:      n = 10.000.000 -> 1.776 wall seconds
+
+
+
+%%%%%%%%%%% If we use intType for everything %%%%%%%%%%%
+
+N is a regular int and it specifies the length of the list we want to sort.
+Ex: 
+    If N would be intType = char. The max list length would be 2^8 = 256
+    If N would be intType = short int. The max list length would be 2^16 = 65.536
+
+
+

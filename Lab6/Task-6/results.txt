@@ -1,0 +1,56 @@
+%%%%%%%%%%%% How does the function work? %%%%%%%%%%%%%
+
+A pure function is a function that always return the same
+output for a given input and it does not change any global
+function or anything external.
+
+If you are calling a function many times with the same
+input and you as the programmer know that the function is
+pure it makes sense to store the result in a variable and
+use that variable instead of calling the function.
+
+
+
+%%%%%%%%%%%% Running the code default %%%%%%%%%%%%%
+
+Result sum: 838134976
+Function call counter: 400000000
+
+time = 7.363s
+
+
+
+
+%%%%%%%%%%%% Storing f(i) as a variable %%%%%%%%%%%%%
+
+Result sum: 838134976
+Function call counter: 20000
+
+time = 0.01s
+
+
+
+%%%%%%%%%%%% Defining f(i) as a pure function with compiler syntax %%%%%%%%%%%%%
+int f(int k) __attribute__((const));
+
+Result sum: 838134976
+Function call counter: 20000
+
+time = 0.01s
+
+
+%%%%%%%%%%%% moving the contents of func.c into main.c  %%%%%%%%%%%%%
+
+Result sum: 838134976
+Function call counter: 400000000
+
+time = 0.356s
+
+The code runs a lot faster than doing no optimization but the function is still called
+400.000.000 times and this code is not a fast as the other "pure" optimizations.
+
+So it calls the function the same amount of times as with no optimization but it then
+"remembers" the output given a certain input so it does not have to do the calculations?
+
+
+

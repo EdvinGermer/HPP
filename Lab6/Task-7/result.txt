@@ -1,0 +1,146 @@
+%%%%%%%%%%%%%% What does the function does %%%%%%%%%%%%%%
+
+We have three matrix multiplication algorithms (kij, ijk, jik) and a given matrix size 'n'.
+The program starts by reading the value of 'n' from the user, then allocating memory
+for three matrices (a, b, c). It then populates matrix 'a' and 'b' with random integers.
+The three matric multiplication routines are then executed one after another to fill the 'c" matrix.
+The time taken for each routine is measured and displayed.
+
+
+kij version:
+    For each element in a, multiply with every column element for a certain row in b
+    Add to c(i,j) for each multiplication, in small steps.
+
+
+
+ijk version:
+    For each row in a and column in b.
+    Iterate over all element in both matrices, multiply togehter and save result in c
+
+
+jik veriosn:
+    Same as ijk but change order of iteration cols first then rows.
+
+
+
+ijk and jik should be equally fast.
+Only difference is if you iterate over rows or cols first in a square matrix
+Iterativly sum upp all elementwise multiplications and add all at once to c
+
+kij should have different complexity.
+Update each element in c with small steps, one addition for each multiplication.
+Faster for large n because
+
+
+
+
+%%%%%%%%%%%%%% Which algorithm works best %%%%%%%%%%%%%%
+
+n = 50
+    Version kij, time = 0.001548
+    Version ijk, time = 0.001281
+    Version jik, time = 0.001270  BEST
+
+n = 100
+    Version kij, time = 0.008348
+    Version ijk, time = 0.006819
+    Version jik, time = 0.006818  BEST
+
+n = 200
+    Version kij, time = 0.008348
+    Version ijk, time = 0.006819
+    Version jik, time = 0.006818  BEST
+
+n = 400
+    Version kij, time = 0.528145
+    Version ijk, time = 0.481033
+    Version jik, time = 0.470720  BEST
+
+n = 800
+    Version kij, time = 4.223112  BEST
+    Version ijk, time = 4.402298
+    Version jik, time = 4.245184
+
+n = 1200
+    Version kij, time = 14.259087  BEST
+    Version ijk, time = 16.959071
+    Version jik, time = 16.364639
+
+n = 1600
+    Version kij, time = 34.102837  BEST
+    Version ijk, time = 50.680569
+    Version jik, time = 40.433870
+
+
+
+
+FOR SMALL n
+    jik version is the best
+    Very little difference between ijk and jik
+
+
+FOR LARGE n
+    kij version is the best
+
+
+
+%%%%%%%%%%%%% implement my own permutation %%%%%%%%%%%%%
+
+Default:
+    ijk
+    jik
+    kij
+
+Other permutation:
+    ikj
+    jki
+    kji
+
+n = 100
+    Version kij, time = 0.012522
+    Version ijk, time = 0.010247
+    Version jik, time = 0.010241
+    Version ikj, time = 0.010224 (my_perm)   BEST
+    Version jki, time = 0.014337 (my_perm)
+    Version kji, time = 0.011893 (my_perm)
+
+n = 400
+    Version kij, time = 0.579512
+    Version ijk, time = 0.507347
+    Version jik, time = 0.493217
+    Version ikj, time = 0.439626 (my_perm)   BEST
+    Version jki, time = 0.729789 (my_perm)
+    Version kji, time = 0.647727 (my_perm)
+
+n = 1000
+    Version kij, time = 8.232249
+    Version ijk, time = 9.474622
+    Version jik, time = 9.306826
+    Version ikj, time = 6.712397 (my_perm)  BEST
+    Version jki, time = 18.453955 (my_perm)
+    Version kji, time = 12.308217 (my_perm)
+
+
+n = 1600
+    Version kij, time = 34.047805
+    Version ijk, time = 49.895048
+    Version jik, time = 39.681010
+    Version ikj, time = 27.685554 (my_perm)  BEST
+    Version jki, time = 92.027793 (my_perm)
+    Version kji, time = 62.806885 (my_perm)
+
+
+version ikj is the best out of all versions
+
+
+
+
+
+
+%%%%%%%%%%%%% Add blocking optimization %%%%%%%%%%%%%
+
+
+....
+
+
+

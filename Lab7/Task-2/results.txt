@@ -1,0 +1,38 @@
+
+
+%%%%%%%%%%%%% Default code %%%%%%%%%%%%%
+f_std tests took   1.543 wall seconds.
+f_opt tests took   1.545 wall seconds.
+
+
+
+
+%%%%%%%%%%%%% My own unrolling %%%%%%%%%%%%%
+
+Remove if statement and do 4 calculations per loop.
+At end of loop increment x
+
+f_std tests took   1.547 wall seconds.
+f_opt tests took   0.845 wall seconds.
+
+
+
+
+
+%%%%%%%%%%%%% Unrolling with compiler %%%%%%%%%%%%%
+
+Compile with (-O2 -funroll-loops)
+    f_std tests took   1.650 wall seconds.
+    f_opt tests took   0.876 wall seconds.  
+
+
+Compile with (-O3 -funroll-loops) 
+    f_std tests took   1.619 wall seconds.
+    f_opt tests took   0.883 wall seconds. 
+
+
+We would expect to see improvment in f_std version if there is any improvment.
+f_opt is the same as before (my own unrolling function)
+
+We see no improvment. The reason for that is probably because the code is too complicated
+for the compiler to realize that unrolling is possible.

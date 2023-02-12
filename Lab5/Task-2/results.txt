@@ -1,0 +1,52 @@
+%%%%%%%%% short-circuit.c %%%%%%%%%
+gcc -o short-circuit short-circuit.c
+
+Regular compiler   ->   0.388s
+
+
+%%%%%%%%% short-circuit-v2.c %%%%%%%%%
+gcc -o short-circuit-v2 short-circuit-v2.c
+
+for ||, most likely to be true goes first
+for &&, most likelt to be false goes first
+
+Regular compiler   ->   0.249s
+
+
+
+
+
+
+%%%%%%%%% bounds.c %%%%%%%%%
+gcc -o bounds bounds.c
+
+FAST = 1
+    Regular compiler   ->   0.918s
+
+FAST = 0
+    Regular compiler   ->   1.18s
+
+
+%%%%%%%%% bounds-v2.c %%%%%%%%%
+gcc -o bounds-v2 bounds-v2.c
+
+setting FAST=1 makes v1 and v2 the same
+Unsigned integers cannot be negative so cast (convert) i to unsigned to avoid || in if statement
+
+FAST = 1 
+    Regular compiler   ->   0.914s
+
+FAST = 0
+    Regular compiler   ->   0.842s
+
+
+
+
+
+
+
+
+
+
+
+

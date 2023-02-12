@@ -1,0 +1,45 @@
+%%%%%%%%% norms.c %%%%%%%%%
+gcc -o norms norms.c
+gcc -O1 -o norms norms.c
+gcc -O2 -o norms norms.c
+gcc -O3 -o norms norms.c
+gcc -Ofast -o norms norms.c
+
+Same result for all:
+    1.000000e-35
+    9.999999e-36
+
+Regular compiler   ->   0.268s
+Option: (-O1)      ->   0.164s
+Option: (-O2)      ->   0.167s
+Option: (-O3)      ->   0.165s
+Option: (-Ofast)   ->   0.106s
+
+
+
+
+%%%%%%%%% denorms.c %%%%%%%%%
+gcc -o denorms denorms.c
+gcc -O1 -o denorms denorms.c
+gcc -O2 -o denorms denorms.c
+gcc -O3 -o denorms denorms.c
+gcc -Ofast -o denorms denorms.c
+
+for starting value tiny = 1e-39
+    Regular compiler   ->   5.086s  ->   1e-39   &   9.999999...e-40
+    Option: (-O1)      ->   3.980s  ->   1e-39   &   9.999999...e-40
+    Option: (-O2)      ->   3.978s  ->   1e-39   &   9.999999...e-40
+    Option: (-O3)      ->   3.976s  ->   1e-39   &   9.999999...e-40
+    Option: (-Ofast)   ->   0.107s  ->   1e-39   &   0
+
+for starting value tiny = 1e-45
+    Regular compiler   ->   5.113s  ->   1.401298e-45   &   1.401298e-45
+    Option: (-O3)      ->   0.008s  ->   1.401298e-45   &   1.401298e-45
+    Option: (-Ofast)   ->   0.010s  ->   1.401298e-45   &   1.401298e-45
+
+for starting value tiny = 1e-50
+    Regular compiler   ->   0.269s  ->   0   &   0
+
+
+
+

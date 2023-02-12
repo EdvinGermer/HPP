@@ -1,0 +1,51 @@
+%%%%%%%%%%% Default performance %%%%%%%%%%% 
+
+transform_std tests took   0.957 wall seconds.
+transform_opt tests took   0.946 wall seconds.
+
+
+
+
+%%%%%%%%%%% Adding restrict keyword %%%%%%%%%%% 
+
+transform_std tests took   0.962 wall seconds.
+transform_opt tests took   0.536 wall seconds.
+
+Big increase when using the restrict keyword
+
+
+
+
+%%%%%%%%%%%  Change the j loop limit from np to NP %%%%%%%%%%% 
+transform_std tests took   0.963 wall seconds.
+transform_opt tests took   0.566 wall seconds.
+
+No real effect on the performance
+
+
+
+
+%%%%%%%%%%%  change int NP   to   const int NP %%%%%%%%%%% 
+transform_std tests took   0.957 wall seconds.
+transform_opt tests took   0.109 wall seconds.
+
+Big increase in performance
+
+
+
+
+
+%%%%%%%%%%%  int NP = 2 inside the transform_opt function %%%%%%%%%%% 
+
+without const keyword:
+    transform_std tests took   0.952 wall seconds.
+    transform_opt tests took   0.108 wall seconds.
+
+with const keyword:
+    transform_std tests took   0.958 wall seconds.
+    transform_opt tests took   0.109 wall seconds.
+
+
+No real change?
+
+

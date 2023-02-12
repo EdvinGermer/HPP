@@ -1,0 +1,44 @@
+################ 50/50 split ################
+
+Serial code:
+        Serical code took   0.242 wall seconds.
+        1229 primes in the range 1->10000
+
+Parallell code:
+        Parallell code took   0.183 wall seconds.     24% improvement
+        1229 primes in the range 1->10000
+
+
+
+Serial code:
+        Serical code took   0.945 wall seconds.
+        2262 primes in the range 1->20000
+
+Parallell code:
+        Parallell code took   0.690 wall seconds.    27% improvement
+        2262 primes in the range 1->20000
+
+
+
+################ 70/30 split ################   
+
+first 70% of number are check on min
+remaining 30% of numbers are checked on thread
+
+Serial code:
+        Serial code took   0.242 wall seconds.
+        1229 primes in the range 1>10000
+
+Parallell code:
+        Parallell code took   0.113 wall seconds.    // 53% improvement
+        900 primes in the range 1->10000
+
+
+
+Serial code:
+        Serial code took   0.933 wall seconds.
+        2262 primes in the range 1>20000
+
+Parallell code:
+        Parallell code took   0.451 wall seconds.   // 52% improvement
+        1652 primes in the range 1->20000

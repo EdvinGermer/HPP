@@ -1,0 +1,98 @@
+%%%%%%%%%%%% What does the code do? %%%%%%%%%%%%
+
+Generate a matrix A, then trying two different functions to calculate the transpose.
+
+"do_transpose_standard"
+Performs a simple matrix transpose on the input matrix A, and stores the result in B.
+It does so by iterating through each element of A and copying it to the corresponding
+transposed position in B.
+
+"do_transpose_optimized"
+Performs the same matrix transpose as the first function, but with an added optimization.
+Instead of transposing the entire matrix A all at once, it splits the matrix into smaller
+blocks of size "blockSz", transposes each block, and then stores the result in B.
+
+"X_version"
+In the x version of the code the resulting matrix transpose is stored in several copies,
+so that the memory access pattern becomes even worse.
+
+
+
+
+%%%%%%%%%%%% Default code %%%%%%%%%%%%
+blockSz = 100
+
+regular
+    do_transpose_mod_standard 1 times for N=5000 took   0.394 wall seconds.
+    do_transpose_mod_optimized 1 times for N=5000 took   0.133 wall seconds.
+
+x-version
+    do_transpose_mod_standard 1 times for N=3000 took   0.758 wall seconds.
+    do_transpose_mod_optimized 1 times for N=3000 took   0.169 wall seconds.
+
+
+
+%%%%%%%%%%%% Blocksz = 1 %%%%%%%%%%%%
+
+regular
+do_transpose_mod_standard 1 times for N=5000 took   0.468 wall seconds.
+do_transpose_mod_optimized 1 times for N=5000 took   0.456 wall seconds.
+
+x-version 
+    do_transpose_mod_standard 1 times for N=3000 took   0.757 wall seconds.
+    do_transpose_mod_optimized 1 times for N=3000 took   0.761 wall seconds.
+
+
+
+
+%%%%%%%%%%%% Blocksz = 10 %%%%%%%%%%%%
+
+regular
+    do_transpose_mod_standard 1 times for N=5000 took   0.391 wall seconds.
+    do_transpose_mod_optimized 1 times for N=5000 took   0.116 wall seconds.
+
+x-version
+    do_transpose_mod_standard 1 times for N=3000 took   0.758 wall seconds.
+    do_transpose_mod_optimized 1 times for N=3000 took   0.209 wall seconds.
+
+
+
+
+%%%%%%%%%%%% Blocksz = 50 %%%%%%%%%%%%
+
+regular
+    do_transpose_mod_standard 1 times for N=5000 took   0.391 wall seconds.
+    do_transpose_mod_optimized 1 times for N=5000 took   0.145 wall seconds.
+    
+x-version
+    do_transpose_mod_standard 1 times for N=3000 took   0.758 wall seconds.
+    do_transpose_mod_optimized 1 times for N=3000 took   0.188 wall seconds.
+
+
+
+%%%%%%%%%%%% Blocksz = 200 %%%%%%%%%%%%        BEST PERFORMANCE
+
+regular
+    do_transpose_mod_standard 1 times for N=5000 took   0.400 wall seconds.
+    do_transpose_mod_optimized 1 times for N=5000 took   0.105 wall seconds.
+
+x-version 
+    do_transpose_mod_standard 1 times for N=3000 took   0.758 wall seconds.
+    do_transpose_mod_optimized 1 times for N=3000 took   0.139 wall seconds.
+
+
+
+%%%%%%%%%%%% Blocksz = 250 %%%%%%%%%%%%
+
+regular
+    do_transpose_mod_standard 1 times for N=5000 took   0.392 wall seconds.
+    do_transpose_mod_optimized 1 times for N=5000 took   0.129 wall seconds.
+    
+x-version
+    do_transpose_mod_standard 1 times for N=3000 took   0.769 wall seconds.
+    do_transpose_mod_optimized 1 times for N=3000 took   0.149 wall seconds.
+
+
+
+
+

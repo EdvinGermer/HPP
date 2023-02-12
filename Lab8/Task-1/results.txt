@@ -1,0 +1,74 @@
+%%%%%%%%% Same amount of work %%%%%%%%%
+
+This is the main() function starting.
+the main() function now calling pthread_create().
+This is the main() function after pthread_create()
+main() starting doing some work.
+the_thread_func() starting doing some work.
+
+Result of work in the_thread_func(): sum = 99.999998
+Result of work in main(): sum = 99.999998
+the main() function now calling pthread_join().
+
+real    0m4,191s
+user    0m8,367s
+sys     0m0,007s
+
+
+We can see that real time is roughly half of user time
+
+
+
+%%%%%%%%% thread has more work %%%%%%%%%
+
+This is the main() function starting.
+the main() function now calling pthread_create().
+This is the main() function after pthread_create()
+main() starting doing some work.
+the_thread_func() starting doing some work.
+
+Result of work in main(): sum = 99.999998
+the main() function now calling pthread_join().
+Result of work in the_thread_func(): sum = 199.999992
+
+real    0m8,368s
+user    0m12,558s
+sys     0m0,018s
+
+
+
+
+%%%%%%%%% 3 threads %%%%%%%%%
+
+main and the 2 threads all do the same calculations
+
+This is the main() function starting.
+the main() function now calling pthread_create().
+the_thread_func() starting doing some work.
+This is the main() function after pthread_create()
+main() starting doing some work.
+the_thread_func_b() starting doing some work.
+Result of work in the_thread_func(): sum = 99.999998
+Result of work in the_thread_func_b(): sum = 99.999998
+Result of work in main(): sum = 99.999998
+the main() function now calling pthread_join() on the first thread.
+the main() function now calling pthread_join() on the second (b) thread.
+
+real    0m4,216s
+user    0m12,579s
+sys     0m0,012s
+
+3 threads give real time roughly a third of user time.
+
+
+
+
+
+
+%%%%%%%%% top command %%%%%%%%%
+
+  PID  USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+108582 edge9521  20   0   19164   1024    936 R 300,0   0,0   0:12.00 thread
+
+
+We can see that we have 300% utilisation

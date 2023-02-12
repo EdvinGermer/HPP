@@ -1,0 +1,16 @@
+%%%%%%%%% test.c %%%%%%%%%
+gcc -Ox -o test test.c
+
+Regular compiler   ->   s
+Option: (-O1)      ->   s
+Option: (-O2)      ->   s
+Option: (-O3)      ->   s
+
+
+
+
+
+
+
+
+

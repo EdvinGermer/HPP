@@ -1,0 +1,43 @@
+%%%%%%%%% mallocycode.c %%%%%%%%%
+gcc -Ox -o mallocycode mallocycode.c
+
+Regular compiler   ->   2.918s
+Option: (-O1)      ->   2.597s
+Option: (-O2)      ->   2.544s
+Option: (-O3)      ->   2.553s
+
+
+%%%%%%%%% regularcode.c %%%%%%%%%
+gcc -Ox -o regularcode regularcode.c
+
+Regular compiler   ->   2,522s
+Option: (-O1)      ->   1.063s
+Option: (-O2)      ->   1.062s
+Option: (-O3)      ->   1.061s
+
+
+%%%%%%%%% sleepycode.c %%%%%%%%%
+gcc -Ox -o sleepycode sleepycode.c
+
+Regular compiler   ->   2,519s
+Option: (-O1)      ->   2.525s
+Option: (-O2)      ->   1.061s
+Option: (-O3)      ->   1.062s
+
+
+%%%%%%%%% threadedcode.c %%%%%%%%%
+gcc -Ox -o threadedcode threadedcode.c -lpthread
+
+Regular compiler   ->   5.011s
+Option: (-O1)      ->   3.572s
+Option: (-O2)      ->   2.121s
+Option: (-O3)      ->   2.117s
+
+
+
+
+
+
+
+
+

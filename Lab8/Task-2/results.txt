@@ -1,0 +1,25 @@
+%%%%%%%%%%%%%% look at the data being passed to the first thread %%%%%%%%%%%%%%
+gcc -o thread_data thread_data.c -lpthread
+
+This is the main() function starting.
+the main() function now calling pthread_create().
+This is the main() function after pthread_create()
+the main() function now calling pthread_join().
+     The 1st data: 5.700000
+     The 2nd data: 9.200000
+     The 3rd data: 1.600000
+
+
+
+%%%%%%%%%%%%%% 2 threads with the same func but passing different arrays %%%%%%%%%%%%%%
+
+This is the main() function starting.
+the main() function now calling pthread_create().
+     The 1st data: 5.700000
+     The 2nd data: 9.200000
+     The 3rd data: 1.600000
+This is the main() function after pthread_create()
+the main() function now calling pthread_join().
+     The 1st data: 3.500000
+     The 2nd data: 6.100000
+     The 3rd data: 7.800000

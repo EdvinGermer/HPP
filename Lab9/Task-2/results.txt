@@ -1,0 +1,40 @@
+################# Removing DoItNow from main #################
+
+
+We get an infinite while loop because DoItNow variable is never updated
+
+
+
+
+
+################# Using top and time to see how "waiting" impacts perfromance #################
+
+Top:
+
+    PID     USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND 
+    144527 edge9521  20   0   10968    964    876 R   200,0  0,0   0:10.16 wait_te+
+
+
+
+Time:
+    real    0m10,017s
+    user    0m20,023s
+    sys     0m0,003s
+
+
+################# Added pthread_cond #################
+
+Top:
+    PID    USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND 
+    144882 edge9521  20   0   10968    936    848 R 100,0   0,0   0:03.95 wait_te+
+
+Time:
+    real    0m10,030s
+    user    0m10,027s
+    sys     0m0,002s
+
+
+
+################# Removing pthread_cond_signal() #################
+
+Thread will sleep forever.

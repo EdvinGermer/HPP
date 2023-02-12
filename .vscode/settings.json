@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "chrono": "c",
+        "variant": "c",
+        "time.h": "c",
+        "pthread.h": "c",
+        "stdio.h": "c",
+        "stdlib.h": "c"
+    }
+}

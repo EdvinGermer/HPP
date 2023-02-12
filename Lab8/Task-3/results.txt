@@ -1,0 +1,66 @@
+############### N1=700*10^6  N2=100*10^6 ############### 
+
+gcc -o threaded_computation threaded_computation.c -lpthread
+
+N1 = Main
+N2 = Thread
+
+This is the main() function starting.
+the main() function now calling pthread_create().
+This is the main() function after pthread_create()
+thread function took   0.304 wall seconds.        // Thread function has little work and finishes quickly
+main function took   2.039 wall seconds.           // Main function has lots of work and finishes slowly
+the main() function now calling pthread_join().
+sum computed by main() : 4900000000
+sum computed by thread : 700000000
+totalSum : 5600000000
+
+real    0m2,049s
+user    0m2,353s
+sys     0m0,001s
+
+
+
+############### N1=400*10^6  N2=400*10^6 ############### 
+
+gcc -o threaded_computation threaded_computation.c -lpthread
+
+N1 = Main
+N2 = Thread
+
+This is the main() function starting.
+the main() function now calling pthread_create().
+This is the main() function after pthread_create()
+main function took   1.180 wall seconds.              // Equal amount of work so finish after same time
+the main() function now calling pthread_join().
+thread function took   1.181 wall seconds.            // Equal amount of work so finish after same time
+sum computed by main() : 2800000000
+sum computed by thread : 2800000000
+totalSum : 5600000000
+
+real    0m1,192s    // About twice as fast
+user    0m2,369s
+sys     0m0,004s
+
+
+
+############### N1=100*10^6  N2=700*10^6 ############### 
+
+gcc -o threaded_computation threaded_computation.c -lpthread
+
+N1 = Main
+N2 = Thread
+
+This is the main() function starting.
+the main() function now calling pthread_create().
+This is the main() function after pthread_create()
+main function took   0.305 wall seconds.                // Main function has little work and finishes quickly
+the main() function now calling pthread_join().
+thread function took   2.060 wall seconds.          // Thread function has a lot of work and finishes slowly
+sum computed by main() : 700000000
+sum computed by thread : 4900000000
+totalSum : 5600000000
+
+real    0m2,071s            
+user    0m2,375s
+sys     0m0,002s

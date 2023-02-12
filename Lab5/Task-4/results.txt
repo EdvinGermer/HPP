@@ -1,0 +1,101 @@
+%%%%%%%%% memset.c %%%%%%%%%
+gcc -o memset memset.c
+gcc -O1 -o memset memset.c
+gcc -O2 -o memset memset.c
+gcc -O3 -o memset memset.c
+
+FAST = 0
+    Regular compiler   ->   0.657s
+    Option: (-O1)      ->   0.188s
+    Option: (-O2)      ->   0.062s
+    Option: (-O3)      ->   0.062s
+
+
+FAST = 1
+    Regular compiler   ->   0.056s
+    Option: (-O1)      ->   0.060s
+    Option: (-O2)      ->   0.058s
+    Option: (-O3)      ->   0.067s
+
+
+
+%%%%%%%%% lookup.c %%%%%%%%%
+gcc -o lookup lookup.c
+gcc -O1 -o lookup lookup.c
+gcc -O2 -o lookup lookup.c
+gcc -O3 -o lookup lookup.c
+
+FAST = 0
+    Regular compiler   ->   1.269s
+    Option: (-O1)      ->   0.044s
+    Option: (-O2)      ->   0.259s
+    Option: (-O3)      ->   0.206s
+
+
+FAST = 1
+    Regular compiler   ->   0.441s
+    Option: (-O1)      ->   0.039s
+    Option: (-O2)      ->   0.095s
+    Option: (-O3)      ->   0.092s
+
+
+
+%%%%%%%%% strength_reduction.c %%%%%%%%%
+gcc -o strength_reduction strength_reduction.c
+gcc -O1 -o strength_reduction strength_reduction.c
+gcc -O2 -o strength_reduction strength_reduction.c
+gcc -O3 -o strength_reduction strength_reduction.c
+
+
+Default
+    1 2 3 1, 0.100000 0.500000 0.330000
+    30 480 32 16, 0.496241 0.660000 0.373113
+
+    Regular compiler   ->   1.202s
+    Option: (-O1)      ->   0.608s
+    Option: (-O2)      ->   0.611s
+    Option: (-O3)      ->   0.612s
+
+
+Optimized
+    1 2 3 1, 0.100000 0.500000 0.330000
+    30 480 32 16, 0.496241 0.660000 0.373113
+
+    Regular compiler   ->   0.959s
+    Option: (-O1)      ->   0.565s
+    Option: (-O2)      ->   0.556s
+    Option: (-O3)      ->   0.562s
+
+
+
+
+
+
+%%%%%%%%% math_functions.c %%%%%%%%%
+
+sqrtf is the fastest because is uses single-point float
+
+pow function
+    Regular compiler   ->   2.968s
+    Option: (-O1)      ->   2.715s
+    Option: (-O2)      ->   2.690s
+    Option: (-O3)      ->   2.692s
+
+sqrt function
+    Regular compiler   ->   0.669s
+    Option: (-O1)      ->   0.673s
+    Option: (-O2)      ->   0.677s
+    Option: (-O3)      ->   0.670s
+
+sqrtf function
+    Regular compiler   ->   0.389s
+    Option: (-O1)      ->   0.392s
+    Option: (-O2)      ->   0.377s
+    Option: (-O3)      ->   0.377s
+
+
+
+
+
+
+

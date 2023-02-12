@@ -1,0 +1,103 @@
+%%%%%%%%%%%%% Default %%%%%%%%%%%%%
+
+When changing nothing in the code and standard compile with no flags.
+
+Ref: time = 2.118204
+Auto-vec: time = 2.119830
+e_sum: 0.000000
+OK
+
+
+
+%%%%%%%%%%%%% SUMMARY %%%%%%%%%%%%%
+
+The only thing that affected the output was the changes that I made in the "matvec_autovec" function
+according to hint1. Nothing else had any result on the running speed, not even anything else printed in
+the terminal?!?!?!
+
+
+
+
+%%%%%%%%%%%%% O3 flag compiling %%%%%%%%%%%%%
+Ref: time = 0.394664
+Auto-vec: time = 0.394158
+e_sum: 0.000000
+OK
+
+
+
+
+%%%%%%%%%%%%% Different compiling options %%%%%%%%%%%%%
+
+gcc -o matvec matvec.c -ftree-vectorizer-verbose=N      (N=2,3,4,5,6,7)
+    Same as Default
+
+gcc -o matvec matvec.c -fopt-info-vec-missed
+    Same as Default
+
+gcc -o matvec matvec.c -fopt-info-vec
+    Same as default
+
+There is no improvement if I try to use autovectorisation.
+I also do not get any info on missed auto-vectorisation oppertunities.
+I get nothing different.
+
+
+
+%%%%%%%%%%%%% Optimizing  %%%%%%%%%%%%%
+
+Changes to "matvec_autovec" function according to hint 1
+
+gcc -o matvec matvec.c
+    Ref: time = 2.119422
+    Auto-vec: time = 1.642205       23% improvment
+    e_sum: 0.000000
+    OK
+
+
+gcc -o matvec matvec.c -ftree-vectorize
+    Ref: time = 2.117229
+    Auto-vec: time = 1.630199     23% improvement   No difference compared to above
+    e_sum: 0.000000
+    OK
+
+
+hint 2
+
+        gcc -o matvec matvec.c -ftree-vectorize -march=native
+            Ref: time = 2.119259
+            Auto-vec: time = 1.642878    23% improvement    No difference compared to above
+            e_sum: 0.000000
+            OK
+
+        gcc -o matvec matvec.c -ftree-vectorize -mavx
+            Illegal instruction
+
+        gcc -o matvec matvec.c -ftree-vectorize -mavx2
+            Illegal instruction
+
+
+hint 3
+
+        gcc -o matvec matvec.c -ftree-vectorize -ffast-math
+            Ref: time = 2.121480
+            Auto-vec: time = 1.644655   23% improvement     No difference compared to above
+            e_sum: 0.000000
+            OK
+
+
+
+
+
+
+
+
+No info from
+    gcc -o matvec matvec.c -ftree-vectorizer-verbose=7
+    gcc -o matvec matvec.c -ftree-vectorize -fopt-info-vec
+    gcc -o matvec matvec.c -ftree-vectorize -fopt-info-vec-missed
+
+
+
+
+

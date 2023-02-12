@@ -1,0 +1,85 @@
+%%%%%%%%%%%%% Initial comparison %%%%%%%%%%%%%
+Mergesort:
+Divide list into sublist and sublist. Sort the smallest sublists and then reassemble.
+    n = 50.000  -> 0.013s
+    n = 100.000 -> 0.030s
+    n = 200.000 -> 0.038s
+
+
+Bubblesort:
+Compare all elements in the list. If elements are not in the right order. Swap them.
+    n = 50.000  -> 1.602s
+    n = 100.000 -> 5.263s
+    n = 200.000 -> 19.090s
+
+
+%%%%%%%%%%%%% Merge sort with memory leaks %%%%%%%%%%%%%
+
+No memory leaks:
+    n = 50.000  -> 0.013s
+    n = 100.000 -> 0.030s
+    n = 200.000 -> 0.038s
+
+With memory leaks:
+    n = 50.000  -> 0.018s  40% worse
+    n = 100.000 -> 0.033s  32% worse
+    n = 200.000 -> 0.061s  60% worse
+
+
+%%%%%%%%%%%%% Optmize merge-sort malloc %%%%%%%%%%%%%
+
+Default:  (with free(list1) and free list(2))
+    n = 50.000  -> 0.013s
+    n = 100.000 -> 0.030s
+    n = 200.000 -> 0.038s
+
+Optimized:  (replace 2 malloc calls with one and use pointer to point to one half, with free(buffer)
+    n = 50.000  -> 0.011s
+    n = 100.000 -> 0.015s
+    n = 200.000 -> 0.037s
+
+
+
+
+%%%%%%%%%%%%% Optmize merge-sort by moving lists to stack %%%%%%%%%%%%%
+
+stack size = 8192 kbytes   (from ulimit -a)
+
+On stack:
+    n = 10.000  -> 0.017s
+    n = 50.000  -> 0.021s
+    n = 100.000 -> 0.038s
+    n = 200.000 -> 0.052s
+
+Up to n = 1.000.000 -> 0.188s after that we get segmentation fault
+
+
+
+
+
+%%%%%%%%%%%%% Merge-sort and bubble-sort combo %%%%%%%%%%%%%
+
+Default:
+    n = 100.000 -> 0.030s
+
+
+With bubble sort if N < 5:
+    n = 100.000 -> 0.025s
+
+With bubble sort if N < 10:
+    n = 100.000 -> 0.023s
+
+With bubble sort if N < 20:     SEEMS TO BE OPTIMAL   (almost 30% improvement)
+    n = 100.000 -> 0.022s
+
+With bubble sort if N < 50:
+    n = 100.000 -> 0.035s
+
+With bubble sort if N < 100:
+    n = 100.000 -> 0.045s
+
+With bubble sort if N < 200:
+    n = 100.000 -> 0.055s
+
+
+

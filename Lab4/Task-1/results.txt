@@ -1,0 +1,7 @@
+%%%%%%%%%%%%% Default %%%%%%%%%%%%% 
+
+x = 21582
+
+
+Compile with gdb
+    gcc -g littlecode.c -o littlecode

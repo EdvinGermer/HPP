@@ -1,0 +1,57 @@
+################## Running the code as is ##################
+
+./matmul 1000
+
+Result:
+    Doing matrix-matrix multiplication...
+    Elapsed time: 11.368069 wall seconds
+    Verifying result correctness for a few result matrix elements...
+    max_abs_diff = 0
+    OK -- result seems correct!
+
+
+
+
+################## With my parallell implementation ##################
+
+./matmul 1000
+
+Result with 4 threads:
+    Doing matrix-matrix multiplication...
+    Elapsed time: 3.099744 wall seconds                                     // 3.7 times faster than org
+    Verifying result correctness for a few result matrix elements...
+    max_abs_diff = 0
+    OK -- result seems correct!
+
+Result with 16 threads:
+    Doing matrix-matrix multiplication...
+    Elapsed time: 1.614207 wall seconds                                     // 7 times faster than org
+    Verifying result correctness for a few result matrix elements...
+    max_abs_diff = 0
+    OK -- result seems correct!
+
+
+
+################## When is it worth it to use parallisation ##################
+
+With 4 threads paralization
+
+n = 500
+    org: 0.912140 wall seconds
+    para: 0.173461 wall seconds    // 81% faster
+
+n = 250
+    org: 0.038771 wall seconds
+    para: 0.032819 wall seconds    // 15% faster
+
+n = 200
+    org: 0.021986 wall seconds
+    para: 0.023602 wall seconds    // 7% slower
+
+n = 100
+    org: 0.002431 wall seconds
+    para: 0.004998 wall seconds    // 105% slower
+
+n = 50
+    org: 0.000265 wall seconds    // 255% slower
+    para: 0.000942 wall seconds

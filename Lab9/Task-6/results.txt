@@ -1,0 +1,77 @@
+############### Running the program as is ###############
+
+1 thread
+
+    LEN = 100.000
+        Time: 15.417517  NUM_THREADS: 1
+
+        real    0m15,431s
+        user    0m9,972s
+        sys     0m6,127s
+
+
+    LEN = 200.000
+        Time: 44.482970  NUM_THREADS: 1          // Len = 2x,   time = 3x
+
+        real    0m44,500s
+        user    0m34,509s
+        sys     0m11,220s
+
+
+
+    Experimental results give somewhere between   n and n^2 time complexity
+    Theoretical resuts give O(n^2). Two for loops that iterare over the entire length = n*n
+
+
+4 thread
+    
+    LEN = 100.000
+        Time: 4.730516  NUM_THREADS: 4
+
+        real    0m4,743s
+        user    0m7,560s
+        sys     0m4,765s
+
+
+
+    LEN = 200.000
+        Time: 14.349467  NUM_THREADS: 4       // Len = 2x,  time = 3x ish
+
+        real    0m14,366s
+        user    0m30,710s
+        sys     0m10,704s
+
+
+
+    Look like time complexity is approaching O(n^2 for large lists)
+
+
+
+
+
+
+############### Implement new strategy ###############
+
+For each element in the original list count all elements that are smaller.
+This number is the index of that element in the new list
+
+
+Results:
+    LEN = 100.000
+        Time: 23.582905  NUM_THREADS: 4
+
+        real    0m23,596s
+        user    1m14,229s
+        sys     0m5,297s
+
+
+Comparison with org algorithm:
+    LEN = 100.000
+        Time: 4.730516  NUM_THREADS: 4
+
+        real    0m4,743s
+        user    0m7,560s
+        sys     0m4,765s
+
+
+With the changes the code becomes much worse. Why is that?

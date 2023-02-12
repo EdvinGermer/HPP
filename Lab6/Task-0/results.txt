@@ -1,0 +1,31 @@
+ModifyWithStep8() 
+• Only update every 8th element in the array
+• Total time = 2.165s
+
+or
+
+ModifyLow()
+• Only update values containing the first 8 elements in the array
+• Total time = 0.706s
+
+ModifyLow() should be faster since we are only modifying elements in the same cache
+
+
+
+
+When is the tipping point where ModifyWithStep8() becomes fast?
+    n = 200, m = 500.000     -> 2.179s
+    n = 100, m = 1.000.000   -> 2.176s
+    n = 75,  m = 1.333.333   -> 2.176s
+    n = 64,  m = 1.562.500   -> 0.354s    THIS IS THRESHOLD
+    n = 50,  m = 2.000.000   -> 0.355s
+    n = 30,  m = 3.333.333   -> 0.356s
+    n = 20,  m = 5.000.000   -> 0.375s
+    n = 10,  m = 10.000.000  -> 0.360s
+
+
+lscpu -> 256Kib (8instances)    -> 256/8 = 32Kib?????
+
+struct     = 512 bytes
+64 structs = 512*64   = 32.768bytes = 32Kib
+

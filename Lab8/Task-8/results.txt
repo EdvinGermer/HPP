@@ -1,0 +1,29 @@
+################## Running the code as is ##################
+
+gcc -o mutextest mutextest.c -lpthread
+
+./mutextest 2  ->    sum = 110026
+./mutextest 2  ->    sum = 109083
+./mutextest 2  ->    sum = 123635
+./mutextest 2  ->    sum = 130818
+
+./mutextest 4  ->    sum = 134182
+./mutextest 4  ->    sum = 150631
+./mutextest 4  ->    sum = 138356
+./mutextest 4  ->    sum = 135162
+
+
+################## Modifying program with mutex ##################
+
+gcc -o mutextest_2 mutextest_2.c -lpthread
+
+./mutextest 2  ->    sum = 20000
+./mutextest 2  ->    sum = 20000
+./mutextest 2  ->    sum = 20000
+./mutextest 2  ->    sum = 20000
+
+./mutextest 4  ->    sum = 40000
+./mutextest 4  ->    sum = 40000
+./mutextest 4  ->    sum = 40000
+./mutextest 4  ->    sum = 40000
+

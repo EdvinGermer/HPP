@@ -1,0 +1,67 @@
+%%%%%%%%% loop_invariants.c %%%%%%%%%
+gcc -o loop_invariants loop_invariants.c
+gcc -O1 -o loop_invariants loop_invariants.c
+gcc -O2 -o loop_invariants loop_invariants.c
+gcc -O3 -o loop_invariants loop_invariants.c
+
+
+FAST = 1
+    Regular compiler   ->   1.433s
+    Option: (-O1)      ->   0.460s
+    Option: (-O2)      ->   0.424s
+    Option: (-O3)      ->   0.300s
+
+FAST = 0
+    Regular compiler   ->   1.846s
+    Option: (-O1)      ->   0.477s
+    Option: (-O2)      ->   0.416s
+    Option: (-O3)      ->   0.309s
+
+
+%%%%%%%%% string_loop.c %%%%%%%%%
+gcc -o string_loop string_loop.c
+gcc -O1 -o string_loop string_loop.c
+gcc -O2 -o string_loop string_loop.c
+gcc -O3 -o string_loop string_loop.c
+
+
+FAST = 1
+    Regular compiler   ->   3.119s
+    Option: (-O1)      ->   0.995s
+    Option: (-O2)      ->   0.957s
+    Option: (-O3)      ->   0.055s
+
+FAST = 0
+    Regular compiler   ->   3.043s
+    Option: (-O1)      ->   1.036s
+    Option: (-O2)      ->   1.371s
+    Option: (-O3)      ->   1.364s
+
+
+%%%%%%%%% array_loop.c %%%%%%%%%
+gcc -o array_loop array_loop.c
+gcc -O1 -o array_loop array_loop.c
+gcc -O2 -o array_loop array_loop.c
+gcc -O3 -o array_loop array_loop.c
+
+
+FAST = 1
+    Regular compiler   ->   2.375s
+    Option: (-O1)      ->   0.106s
+    Option: (-O2)      ->   0.825s
+    Option: (-O3)      ->   0.009s
+
+FAST = 0
+    Regular compiler   ->   2.533s
+    Option: (-O1)      ->   0.106s
+    Option: (-O2)      ->   0.811s
+    Option: (-O3)      ->   0.007s
+
+
+
+
+
+
+
+
+

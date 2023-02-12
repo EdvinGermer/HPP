@@ -1,0 +1,97 @@
+################# Summary ################# 
+
+The results from serial and parallell is not exactly the same, there is a veru small error
+of size 10^-13.
+
+We are doing exactly the same calculations in both serial and parallell. 
+Maybe there is a small rounding error when adding the sums togheter in parallel,
+in that case the serial one should be more accurate.
+
+Testing gives parallell more accurate, with more threads giving increased accuracy.
+
+
+PI actual: 3.141592653589 7932
+
+################# Calculating pi in serial (running pi.c as is) #################
+
+PI is approx. 3.141592653589 9894
+
+real    0m4,606s
+user    0m4,605s
+sys     0m0,001s
+
+
+
+################# Calculating pi in parallel with 4 threads ################# 
+
+Thread 0 has lower bound = 0, upper bound = 125000000
+Thread 1 has lower bound = 125000000, upper bound = 250000000
+Thread 3 has lower bound = 375000000, upper bound = 500000000
+Thread 2 has lower bound = 250000000, upper bound = 375000000
+  
+  Thread 3 calcualtes the sum = 0.567588
+  Thread 0 calcualtes the sum = 0.979915
+  Thread 1 calcualtes the sum = 0.874676
+  Thread 2 calcualtes the sum = 0.719414
+
+PI is approx. 3.141592653589 8682
+
+real    0m1,203s    // 4 threads -> roughly 4 times the speed
+user    0m4,726s
+sys     0m0,005s
+
+
+
+Absolute error =   1.2123635e-13
+
+
+
+
+
+
+################# Calculating pi in parallel with 16 threads ################# 
+
+
+Thread 0 has lower bound = 0, upper bound = 31250000
+Thread 1 has lower bound = 31250000, upper bound = 62500000
+Thread 2 has lower bound = 62500000, upper bound = 93750000
+Thread 3 has lower bound = 93750000, upper bound = 125000000
+Thread 4 has lower bound = 125000000, upper bound = 156250000
+Thread 5 has lower bound = 156250000, upper bound = 187500000
+Thread 6 has lower bound = 187500000, upper bound = 218750000
+Thread 7 has lower bound = 218750000, upper bound = 250000000
+Thread 8 has lower bound = 250000000, upper bound = 281250000
+Thread 9 has lower bound = 281250000, upper bound = 312500000
+Thread 10 has lower bound = 312500000, upper bound = 343750000
+Thread 11 has lower bound = 343750000, upper bound = 375000000
+Thread 13 has lower bound = 406250000, upper bound = 437500000
+Thread 15 has lower bound = 468750000, upper bound = 500000000
+Thread 12 has lower bound = 375000000, upper bound = 406250000
+Thread 14 has lower bound = 437500000, upper bound = 468750000
+  
+  Thread 0 calcualtes the sum = 0.249675
+  Thread 6 calcualtes the sum = 0.214559
+  Thread 4 calcualtes the sum = 0.231625
+  Thread 2 calcualtes the sum = 0.243972
+  Thread 1 calcualtes the sum = 0.247745
+  Thread 8 calcualtes the sum = 0.194967
+  Thread 10 calcualtes the sum = 0.174752
+  Thread 13 calcualtes the sum = 0.146054
+  Thread 12 calcualtes the sum = 0.155262
+  Thread 7 calcualtes the sum = 0.204949
+  Thread 9 calcualtes the sum = 0.184839
+  Thread 3 calcualtes the sum = 0.238523
+  Thread 11 calcualtes the sum = 0.164855
+  Thread 5 calcualtes the sum = 0.223543
+  Thread 14 calcualtes the sum = 0.137285
+  Thread 15 calcualtes the sum = 0.128988
+
+PI is approx. 3.141592653589 8531
+
+real    0m0,617s        // 7.5 times as fast
+user    0m8,947s
+sys     0m0,054s
+
+
+
+Absolute error =   1.358913e-13

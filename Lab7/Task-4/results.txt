@@ -1,0 +1,18 @@
+%%%%%%%%%%%%% Default %%%%%%%%%%%%% 
+
+f_std tests took   1.561 wall seconds.
+f_opt tests took   1.859 wall seconds.
+Checking correctness: abs_diff =        0
+OK, result seems correct.
+
+The two functions are identical but we get different run times?
+
+
+
+
+%%%%%%%%%%%%% Optimize IF statements %%%%%%%%%%%%% 
+
+f_std tests took   1.548 wall seconds.
+f_opt tests took   0.250 wall seconds.
+Checking correctness: abs_diff =        0
+OK, result seems correct.

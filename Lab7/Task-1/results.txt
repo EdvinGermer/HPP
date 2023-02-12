@@ -1,0 +1,53 @@
+%%%%%%%%%%%%% Default %%%%%%%%%%%%%
+Insert N1 into function
+Calling each functio N2 times
+
+
+f_std tests took   1.308 wall seconds.
+f_opt tests took   1.310 wall seconds.
+
+
+
+%%%%%%%%%%%%% Loop unrolling %%%%%%%%%%%%%
+
+Unrolling factor = 3
+    f_std tests took   1.312 wall seconds.
+    f_opt tests took   1.169 wall seconds.  11% improvement
+
+Unrolling factor = 4
+    f_std tests took   1.338 wall seconds.
+    f_opt tests took   1.005 wall seconds.  25% improvement
+
+Unrolling factor = 10
+    f_std tests took   1.325 wall seconds.
+    f_opt tests took   0.967 wall seconds.  27% improvement
+
+Unrolling factor = 12
+    f_std tests took   1.334 wall seconds.
+    f_opt tests took   0.967 wall seconds.  27.5% improvement
+
+
+Almost no benefit in more than unroll factor of 4
+
+
+
+
+
+%%%%%%%%%%%%% Loop unrolling with compiler %%%%%%%%%%%%%
+
+Default:
+    f_std tests took   1.307 wall seconds.
+    f_opt tests took   1.309 wall seconds.
+
+Compile with (-O2 -funroll-loops)
+    f_std tests took   1.553 wall seconds.
+    f_opt tests took   1.553 wall seconds.
+
+Compile with (-O3 -funroll-loops)
+    f_std tests took   0.557 wall seconds.
+    f_opt tests took   0.557 wall seconds.
+
+
+
+
+
