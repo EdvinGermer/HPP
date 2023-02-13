@@ -5,9 +5,7 @@
 #include <unistd.h>
 
 
-
-
-
+// gcc -o troubleshoot troubleshoot.c -lm
 
 /*############### Define a struct for the particles ##############*/
 typedef struct particle{
@@ -18,9 +16,6 @@ typedef struct particle{
     double vy;
     double brightness;
 } particle_t;
-
-
-
 
 /*############### Define update function ##############*/
 void update_particle(particle_t* particles, int i, double N, double dt, double G, double e0)
@@ -55,19 +50,20 @@ void update_particle(particle_t* particles, int i, double N, double dt, double G
 };
 
 
-
-
 int main(int argc, char *argv[])
 {
-   
     /*############### Setup ##############*/
-    
     int N = 10;
     int nsteps = 200;
     int idx = 0;
 
-    char* filename1= "/home/edge9521/HPP/A3/input_data/ellipse_N_00010.gal";
-    char* filename2= "/home/edge9521/HPP/A3/ref_output_data/ellipse_N_00010_after200steps.gal";
+    int i;
+    double G = 100/N;  // Gravity 
+    double e0 = 10e-3; // Gravity correctional term
+    double dt = 10e-5;  // Time step
+
+    char* input_dir= "/home/edge9521/HPP/A3/input_data/ellipse_N_00010.gal";
+    char* correct_dir= "/home/edge9521/HPP/A3/ref_output_data/ellipse_N_00010_after200steps.gal";
 
 
     /*############### Allocate memory ##############*/
@@ -76,30 +72,20 @@ int main(int argc, char *argv[])
     {printf("ERROR: Could not allocate memory for %d particles\n", N);}
 
 
-    /*############### Read data ##############*/
-    FILE *input_file = fopen(filename1, "rb");
+    /*############### Read raw input data ##############*/
+    FILE *input_file = fopen(input_dir, "rb");
     if (input_file == NULL)
     {printf("ERROR: Could not open file \n");}
 
     for (i=0;i<N;i++)
     {fread(&particles[i], sizeof(particle_t), 1, input_file);}
-    fclose(file);
+    fclose(input_file);
 
 
-
-    /*############### Run simulation ##############*/
-    for (i=0; i<nsteps; i++)         // For every time step
-    {
-        for (int idx=0;idx<N;idx++)  // Update every particle
-        {update_particle(particles,idx, N, dt, G, e0);}
-    }
-   
-
-    /*############### Print my final data ##############*/
-    
+    /*############### Print correct final data ##############*/
     particle_t *correct = malloc(N * sizeof(particle_t));
 
-    FILE *correct_file = fopen(filename2, "rb");
+    FILE *correct_file = fopen(correct_dir, "rb");
     if (correct_file == NULL)
     {printf("ERROR: Could not open file \n");}
 
@@ -107,8 +93,8 @@ int main(int argc, char *argv[])
     {fread(&correct[i], sizeof(particle_t), 1, correct_file);}
     fclose(correct_file);
     
-    printf("\nMy final data\n");
-    printf("    Particle: %d\n", i);
+    printf("\nCorrect final data\n");
+    printf("    Particle: %d\n", idx);
     printf("         x          = %f\n", correct[idx].x);
     printf("         y          = %f\n", correct[idx].y);
     printf("         m          = %f\n", correct[idx].m);
@@ -118,18 +104,17 @@ int main(int argc, char *argv[])
 
 
 
+    /*############### Run simulation ##############*/
+    for (i=0; i<nsteps; i++)         // For every time step
+    {
+        for (int j=0;j<N;j++)  // Update every particle
+        {update_particle(particles,j, N, dt, G, e0);}
+    }
+   
 
-
-
-/*############### Print correct final data ##############*/
-   
-   
-   
-   
-   
-   
-    printf("\nThe correct final data\n");
-    printf("    Particle: %d\n", i);
+   /*############### Print my final data ##############*/
+    printf("\nMy final data\n");
+    printf("    Particle: %d\n", idx);
     printf("         x          = %f\n", particles[idx].x);
     printf("         y          = %f\n", particles[idx].y);
     printf("         m          = %f\n", particles[idx].m);
@@ -138,8 +123,20 @@ int main(int argc, char *argv[])
     printf("         brigthness = %f\n", particles[idx].brightness);
 
 
+    /*############### Print difference ##############*/
+    printf("\nDifference in output\n");
+    printf("    Particle: %d\n", idx);
+    printf("         d_x          = %f\n", particles[idx].x-correct[idx].x);
+    printf("         d_y          = %f\n", particles[idx].y-correct[idx].y);
+    printf("         d_m          = %f\n", particles[idx].m-correct[idx].m);
+    printf("         d_vx         = %f\n", particles[idx].vx-correct[idx].vx);
+    printf("         d_vy         = %f\n", particles[idx].vy-correct[idx].vy);
+    printf("         d_brigthness = %f\n", particles[idx].brightness-correct[idx].brightness);
+
+
     /*############### Free memory ##############*/
     free(particles);
+    free(correct);
 
     return 0;
 }
