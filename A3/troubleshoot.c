@@ -22,19 +22,22 @@ void update_particle(particle_t* particles, int i, double N, double dt, double G
 {
     double Fx=0;
     double Fy=0;
-    double r2;
+
+    double r, r_x, r_y;
 
     // Calculate force
     for (int j=0; j<N; j++)   // Iterate over all particles
     {
         if (j!=i)             // Do not calculate for the same particle
         {
-            // Calculate r^2
-            r2 = pow(particles[i].x-particles[j].x,2) + pow(particles[i].y-particles[j].y,2);
+            r_x = particles[i].x - particles[j].x;    // (x_i - k_j)
+            r_y = particles[i].y - particles[j].y;    // (y_i - y_j)
+
+            r = sqrt( pow(r_x,2) + pow(r_y,2) );
             
             // Sum up all contributions in x and y directions
-            Fx += (particles[j].m/r2) * (particles[i].x-particles[j].x);
-            Fy += (particles[j].m/r2) * (particles[i].y-particles[j].y);
+            Fx += (particles[j].m/pow(r + e0,3)) * r_x;
+            Fy += (particles[j].m/pow(r + e0,3)) * r_y;
         }
     }
     Fx = -G*particles[i].m*Fx;
@@ -52,18 +55,19 @@ void update_particle(particle_t* particles, int i, double N, double dt, double G
 
 int main(int argc, char *argv[])
 {
-    /*############### Setup ##############*/
+    // CHANGE THIS TO TEST DIFFERENT CONFIGURATION
+    int idx = 0;   //Which particle to check
     int N = 10;
     int nsteps = 200;
-    int idx = 0;
+    char* input_dir= "/home/edge9521/HPP/A3/input_data/ellipse_N_00010.gal";
+    char* correct_dir= "/home/edge9521/HPP/A3/ref_output_data/ellipse_N_00010_after200steps.gal";
 
+
+    /*############### Inital Setup ##############*/
     int i;
     double G = 100/N;  // Gravity 
     double e0 = 10e-3; // Gravity correctional term
-    double dt = 10e-5;  // Time step
-
-    char* input_dir= "/home/edge9521/HPP/A3/input_data/ellipse_N_00010.gal";
-    char* correct_dir= "/home/edge9521/HPP/A3/ref_output_data/ellipse_N_00010_after200steps.gal";
+    double dt = 10e-5; // Time step
 
 
     /*############### Allocate memory ##############*/

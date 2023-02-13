@@ -1,0 +1,17 @@
+################# 13 feb ##################
+
+N = 10
+nsteps = 200
+
+char* input_dir= "/home/edge9521/HPP/A3/input_data/ellipse_N_00010.gal";
+char* correct_dir= "/home/edge9521/HPP/A3/ref_output_data/ellipse_N_00010_after200steps.gal";
+
+
+Difference in output
+    Particle: 0
+         d_x          = 0.079085
+         d_y          = -0.092021
+         d_m          = 0.000000
+         d_vx         = 2.736626
+         d_vy         = 4.174424
+         d_brigthness = 0.000000
