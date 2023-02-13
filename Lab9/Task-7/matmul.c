@@ -7,8 +7,6 @@
 
 #define NUM_THREADS 16
 
-pthread_mutex_t m;
-
 double **A,**B,**C;
 int n;
 
@@ -36,9 +34,7 @@ void* mult(void* arg)   // idx should be (0,1,2,3)
           {
             temp += A[i][k] * B[k][j];
           }
-          pthread_mutex_lock(&m);
           C[i][j]= temp;
-          pthread_mutex_unlock(&m);
         }
       }
   return NULL;
@@ -47,8 +43,6 @@ void* mult(void* arg)   // idx should be (0,1,2,3)
 
 int main(int argc, char *argv[]) {
   int i, j, k,t;
-
-  pthread_mutex_init(&m, NULL);
 
   if(argc != 2) {
     printf("Please give one argument: the matrix size n\n");
@@ -119,9 +113,6 @@ int main(int argc, char *argv[]) {
     return -1;
   }
   printf("OK -- result seems correct!\n");
-
-  // Destroy mutext
-  pthread_mutex_destroy(&m);
 
   // Free memory
   for(i=0;i<n;i++){

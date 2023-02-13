@@ -12,7 +12,7 @@
 #define NUM_THREADS	4
 #define len 100000
 
-int p = 10;//len/NUM_THREADS;   // How many elements each thread should process at a time
+int p = 10;   // How many elements each thread should process at a time
 
 
 static double get_wall_seconds() {

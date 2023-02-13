@@ -12,6 +12,14 @@
 // nsteps = 1000;
 // ./galsim 10 /home/edge9521/HPP/A3/input_data/ellipse_N_00010.gal 1000 10e-5 1
 
+// N = 10
+// nsteps = 200;
+// ./galsim 10 /home/edge9521/HPP/A3/input_data/ellipse_N_00010.gal 200 10e-5 1
+
+// N = 600
+// nsteps = 1000;
+// ./galsim 600 /home/edge9521/HPP/A3/input_data/ellipse_N_01000.gal 1000 10e-5 1
+
 
 // N = 2
 // nsteps = 1000;
@@ -32,7 +40,7 @@ typedef struct particle{
 } particle_t;
 
 /*############### Graphics settings ##############*/
-const float circleRadius=0.010, circleColor=0;
+const float circleRadius=0.005, circleColor=0;
 const int windowWidth=800;
 const int L=1, W=1;
 
@@ -55,8 +63,6 @@ void print_pos(particle_t* particles, int N)
 /*############### Define update function ##############*/
 void update_particle(particle_t* particles, int i, double N, double dt, double G, double e0)
 {
-    // i is current particle index
-
     double Fx=0;
     double Fy=0;
     double r2;
@@ -70,7 +76,7 @@ void update_particle(particle_t* particles, int i, double N, double dt, double G
             r2 = pow(particles[i].x-particles[j].x,2) + pow(particles[i].y-particles[j].y,2);
             
             // Sum up all contributions in x and y directions
-            Fx += (particles[j].m/r2) * (particles[i].x-particles[j].y);
+            Fx += (particles[j].m/r2) * (particles[i].x-particles[j].x);
             Fy += (particles[j].m/r2) * (particles[i].y-particles[j].y);
         }
     }
@@ -84,7 +90,6 @@ void update_particle(particle_t* particles, int i, double N, double dt, double G
     // Update position
     particles[i].x = particles[i].x + dt*particles[i].vx;
     particles[i].y = particles[i].y + dt*particles[i].vy;
-
 };
 
 
@@ -160,7 +165,7 @@ int main(int argc, char *argv[])
             Refresh();
             usleep(3000); // avoid screen flickering
 
-            usleep(10000); // sleep for microseconds
+            //usleep(10000); // sleep for microseconds
         }  
 
         // Close display when done
@@ -181,8 +186,8 @@ int main(int argc, char *argv[])
     /*############### Create output file ##############*/
     // Open file
     FILE *file_res = fopen("result.gal", "wb");
-    if (file==NULL)
-    {printf("ERROR: Could not create file %s\n", filename);}
+    if (file_res==NULL)
+    {printf("ERROR: Could not create file result.gal\n");}
 
     // Write to the file
     for (i = 0; i < N; i++)
