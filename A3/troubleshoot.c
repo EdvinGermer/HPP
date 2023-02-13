@@ -22,34 +22,34 @@ void update_particle(particle_t* particles, int i, double N, double dt, double G
 {
     double Fx=0;
     double Fy=0;
-
-    double r, r_x, r_y;
+    double r,r3, r_x, r_y;
 
     // Calculate force
     for (int j=0; j<N; j++)   // Iterate over all particles
     {
         if (j!=i)             // Do not calculate for the same particle
         {
-            r_x = particles[i].x - particles[j].x;    // (x_i - k_j)
+            r_x = particles[i].x - particles[j].x;    // (x_i - x_j)
             r_y = particles[i].y - particles[j].y;    // (y_i - y_j)
 
             r = sqrt( pow(r_x,2) + pow(r_y,2) );
-            
+            r3 = pow(r+e0,3);
+
             // Sum up all contributions in x and y directions
-            Fx += (particles[j].m/pow(r + e0,3)) * r_x;
-            Fy += (particles[j].m/pow(r + e0,3)) * r_y;
+            Fx += (particles[j].m/r3) * r_x;
+            Fy += (particles[j].m/r3) * r_y;
         }
     }
-    Fx = -G*particles[i].m*Fx;
-    Fy = -G*particles[i].m*Fy;
+    Fx *= -G*particles[i].m;
+    Fy *= -G*particles[i].m;
 
     // Update velocity
-    particles[i].vx = particles[i].vx + dt*(Fx/particles[i].m);
-    particles[i].vy = particles[i].vy + dt*(Fy/particles[i].m);
+    particles[i].vx += dt*(Fx/particles[i].m);
+    particles[i].vy += dt*(Fy/particles[i].m);
 
     // Update position
-    particles[i].x = particles[i].x + dt*particles[i].vx;
-    particles[i].y = particles[i].y + dt*particles[i].vy;
+    particles[i].x += dt*particles[i].vx;
+    particles[i].y += dt*particles[i].vy;
 };
 
 
@@ -65,10 +65,9 @@ int main(int argc, char *argv[])
 
     /*############### Inital Setup ##############*/
     int i;
-    double G = 100/N;  // Gravity 
-    double e0 = 10e-3; // Gravity correctional term
-    double dt = 10e-5; // Time step
-
+    double G = 100/N;    // Gravity 
+    double e0 = 0.001;   // Gravity correctional term
+    double dt = 0.00001; // Time step
 
     /*############### Allocate memory ##############*/
     particle_t *particles = malloc(N * sizeof(particle_t));

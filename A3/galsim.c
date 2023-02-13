@@ -6,24 +6,27 @@
 
 // N = 100
 // nsteps = 1000;
-// ./galsim 100 /home/edge9521/HPP/A3/input_data/ellipse_N_00100.gal 1000 10e-5 1
+// ./galsim 100 /home/edge9521/HPP/A3/input_data/ellipse_N_00100.gal 1000 0.00001 1
 
 // N = 10
 // nsteps = 1000;
-// ./galsim 10 /home/edge9521/HPP/A3/input_data/ellipse_N_00010.gal 1000 10e-5 1
+// ./galsim 10 /home/edge9521/HPP/A3/input_data/ellipse_N_00010.gal 1000 0.00001 1
 
 // N = 10
 // nsteps = 200;
-// ./galsim 10 /home/edge9521/HPP/A3/input_data/ellipse_N_00010.gal 200 10e-5 1
+// ./galsim 10 /home/edge9521/HPP/A3/input_data/ellipse_N_00010.gal 200 0.00001 1
 
 // N = 600
 // nsteps = 1000;
-// ./galsim 600 /home/edge9521/HPP/A3/input_data/ellipse_N_01000.gal 1000 10e-5 1
-
+// ./galsim 600 /home/edge9521/HPP/A3/input_data/ellipse_N_01000.gal 1000 0.00001 1
 
 // N = 2
 // nsteps = 1000;
-// ./galsim 2 /home/edge9521/HPP/A3/input_data/circles_N_2.gal 1000 10e-5 1
+// ./galsim 2 /home/edge9521/HPP/A3/input_data/circles_N_2.gal 1000 0.00001 1
+
+// N = 4
+// nsteps = 10000;
+// ./galsim 4 /home/edge9521/HPP/A3/input_data/sun_and_planets_N_4.gal 10000 0.00001 1
 
 
 
@@ -44,7 +47,7 @@ const float circleRadius=0.005, circleColor=0;
 const int windowWidth=800;
 const int L=1, W=1;
 
-/*############### Graphics function ##############*/
+/*############### Print function ##############*/
 void print_pos(particle_t* particles, int N)
 {
     printf("Read particle data:\n");
@@ -65,34 +68,34 @@ void update_particle(particle_t* particles, int i, double N, double dt, double G
 {
     double Fx=0;
     double Fy=0;
-
-    double r, r_x, r_y;
+    double r,r3, r_x, r_y;
 
     // Calculate force
     for (int j=0; j<N; j++)   // Iterate over all particles
     {
         if (j!=i)             // Do not calculate for the same particle
         {
-            r_x = particles[i].x - particles[j].x;    // (x_i - k_j)
+            r_x = particles[i].x - particles[j].x;    // (x_i - x_j)
             r_y = particles[i].y - particles[j].y;    // (y_i - y_j)
 
             r = sqrt( pow(r_x,2) + pow(r_y,2) );
-            
+            r3 = pow(r+e0,3);
+
             // Sum up all contributions in x and y directions
-            Fx += (particles[j].m/pow(r + e0,3)) * r_x;
-            Fy += (particles[j].m/pow(r + e0,3)) * r_y;
+            Fx += (particles[j].m/r3) * r_x;
+            Fy += (particles[j].m/r3) * r_y;
         }
     }
     Fx = -G*particles[i].m*Fx;
     Fy = -G*particles[i].m*Fy;
 
     // Update velocity
-    particles[i].vx = particles[i].vx + dt*(Fx/particles[i].m);
-    particles[i].vy = particles[i].vy + dt*(Fy/particles[i].m);
+    particles[i].vx += dt*(Fx/particles[i].m);
+    particles[i].vy += dt*(Fy/particles[i].m);
 
     // Update position
-    particles[i].x = particles[i].x + dt*particles[i].vx;
-    particles[i].y = particles[i].y + dt*particles[i].vy;
+    particles[i].x += dt*particles[i].vx;
+    particles[i].y += dt*particles[i].vy;
 };
 
 
@@ -112,7 +115,7 @@ int main(int argc, char *argv[])
     /*############### Initialize other variables ##############*/
     int i;
     double G = 100/N;  // Gravity 
-    double e0 = 10e-3; // Gravity correctional term
+    double e0 = 0.001; // Gravity correctional term
 
     printf("\nIntial setup:\n");
     printf("    N        = %d\n", N);
@@ -166,8 +169,6 @@ int main(int argc, char *argv[])
 
             Refresh();
             usleep(3000); // avoid screen flickering
-
-            usleep(100000); // sleep for microseconds
         }  
 
         // Close display when done
