@@ -59,11 +59,11 @@ void update_particle(particle_t* particles, particle_t* temp, int i, double N, d
 int main(int argc, char *argv[])
 {
     // CHANGE THIS TO TEST DIFFERENT CONFIGURATION
-    int idx = 0;   //Which particle to check
-    int N = 10;
+    int idx = 1;   //Which particle to check
+    int N = 500;
     int nsteps = 200;
-    char* input_dir= "/home/edge9521/HPP/A3/input_data/ellipse_N_00010.gal";
-    char* correct_dir= "/home/edge9521/HPP/A3/ref_output_data/ellipse_N_00010_after200steps.gal";
+    char* input_dir= "/home/edge9521/HPP/A3/input_data/ellipse_N_00500.gal";
+    char* correct_dir= "/home/edge9521/HPP/A3/ref_output_data/ellipse_N_00500_after200steps.gal";
 
     /*############### Inital Setup ##############*/
     int i;
@@ -95,17 +95,6 @@ int main(int argc, char *argv[])
     for (i=0;i<N;i++)
     {fread(&correct[i], sizeof(particle_t), 1, correct_file);}
     fclose(correct_file);
-
-    /*############### Print correct final data ##############*/
-    printf("\nCorrect final data\n");
-    printf("    Particle: %d\n", idx);
-    printf("         x          = %f\n", correct[idx].x);
-    printf("         y          = %f\n", correct[idx].y);
-    printf("         m          = %f\n", correct[idx].m);
-    printf("         vx         = %f\n", correct[idx].vx);
-    printf("         vy         = %f\n", correct[idx].vy);
-    printf("         brigthness = %f\n", correct[idx].brightness);
-    
     
     /*############### Run simulation ##############*/
     particle_t *temp = malloc(N * sizeof(particle_t));  // temporary array for storing results
@@ -130,32 +119,37 @@ int main(int argc, char *argv[])
 
   
 
+    /*############### Find worse performing datapoint ##############*/
+    int worse_idx=0;
+    double temp2;
+    double max=0;
+    for (int j=0;j<N;j++)  
+    {
+        temp2 = sqrt(pow(particles[j].x-correct[j].x,2)) + sqrt(pow(particles[j].y-correct[j].y,2));// + sqrt(pow(particles[j].vx-correct[j].vx,2)) + sqrt(pow(particles[j].vy-correct[j].vy,2));
+        if (temp2>max)
+        {
+            max = temp2;
+            printf("pos_maxdiff = %0.16f\n",max);
+            worse_idx = j;
+        }
+    }
 
-   /*############### Print my final data ##############*/
-    printf("\nMy final data\n");
-    printf("    Particle: %d\n", idx);
-    printf("         x          = %f\n", particles[idx].x);
-    printf("         y          = %f\n", particles[idx].y);
-    printf("         m          = %f\n", particles[idx].m);
-    printf("         vx         = %f\n", particles[idx].vx);
-    printf("         vy         = %f\n", particles[idx].vy);
-    printf("         brigthness = %f\n", particles[idx].brightness);
 
-
-    /*############### Print difference ##############*/
+    /*############### Print difference of worse index ##############*/
     printf("\nDifference in output\n");
-    printf("    Particle: %d\n", idx);
-    printf("         d_x          = %f\n", particles[idx].x-correct[idx].x);
-    printf("         d_y          = %f\n", particles[idx].y-correct[idx].y);
-    printf("         d_m          = %f\n", particles[idx].m-correct[idx].m);
-    printf("         d_vx         = %f\n", particles[idx].vx-correct[idx].vx);
-    printf("         d_vy         = %f\n", particles[idx].vy-correct[idx].vy);
-    printf("         d_brigthness = %f\n", particles[idx].brightness-correct[idx].brightness);
+    printf("    Particle: %d\n", worse_idx);
+    printf("         d_x          = %0.15f\n", particles[worse_idx].x-correct[worse_idx].x);
+    printf("         d_y          = %0.15f\n", particles[worse_idx].y-correct[worse_idx].y);
+    printf("         d_m          = %0.15f\n", particles[worse_idx].m-correct[worse_idx].m);
+    printf("         d_vx         = %0.15f\n", particles[worse_idx].vx-correct[worse_idx].vx);
+    printf("         d_vy         = %0.15f\n", particles[worse_idx].vy-correct[worse_idx].vy);
+    printf("         d_brigthness = %0.15f\n", particles[worse_idx].brightness-correct[worse_idx].brightness);
 
 
     /*############### Free memory ##############*/
     free(particles);
     free(correct);
+    free(temp);
 
     return 0;
 }

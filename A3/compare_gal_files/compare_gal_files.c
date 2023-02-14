@@ -14,6 +14,12 @@
 // nsteps = 200
 // ./compare_gal_files/compare_gal_files 100 /home/edge9521/HPP/A3/result.gal /home/edge9521/HPP/A3/ref_output_data/ellipse_N_00100_after200steps.gal
 
+// N = 500
+// nsteps = 200
+// ./compare_gal_files/compare_gal_files 500 /home/edge9521/HPP/A3/result.gal /home/edge9521/HPP/A3/ref_output_data/ellipse_N_00500_after200steps.gal
+
+
+
 static void update_maxdiff(double dx, double dy, double* maxabsdiff) {
   double absdiff = sqrt(dx*dx+dy*dy);
   if(absdiff > *maxabsdiff)
@@ -125,6 +131,6 @@ int main(int argc, const char* argv[]) {
     update_maxdiff(pos_dx, pos_dy, &pos_maxdiff);
     update_maxdiff(vel_dx, vel_dy, &vel_maxdiff);
   }
-  printf("pos_maxdiff = %16.12f\n", pos_maxdiff);
+  printf("pos_maxdiff = %16.16f\n", pos_maxdiff);
   return 0;
 }

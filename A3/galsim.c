@@ -28,6 +28,12 @@
 // nsteps = 10000;
 // ./galsim 4 /home/edge9521/HPP/A3/input_data/sun_and_planets_N_4.gal 10000 0.00001 1
 
+// N = 500
+// nsteps = 200;
+// ./galsim 500 /home/edge9521/HPP/A3/input_data/ellipse_N_00500.gal 500 0.00001 0
+
+
+
 
 
 /*############### Define a struct for the particles ##############*/
@@ -136,6 +142,8 @@ int main(int argc, char *argv[])
     if (particles == NULL) 
     {printf("ERROR: Could not allocate memory for %d particles\n", N);}
 
+    particle_t *temp = malloc(N * sizeof(particle_t));  // temporary array for storing results
+
     /*############### Read data ##############*/
     FILE *file = fopen(filename, "rb");
     if (file == NULL)
@@ -146,38 +154,33 @@ int main(int argc, char *argv[])
     fclose(file);
 
     /*############### Print initial data ##############*/
-    printf("Read initial data:\n");
-    print_pos(particles,N);
+    // printf("Read initial data:\n");
+    // print_pos(particles,N);
 
     /*############### Update positions ##############*/
     if (graphics == 0)
     {
-        particle_t *temp = malloc(N * sizeof(particle_t));  // temporary array for storing results
-    
-    for (i=0; i<nsteps; i++)         // For every time step
-    {
-        // Update every particle
-        for (int j=0;j<N;j++)  
-        {update_particle(particles, temp, j, N, dt, G, e0);}
-
-        // Copy over result from temp to particles
-        for (int j=0;j<N;j++)  // Update every particle
+        for (i=0; i<nsteps; i++)         // For every time step
         {
-            particles[j].x = temp[j].x;
-            particles[j].y = temp[j].y;
-            particles[j].m = temp[j].m;
-            particles[j].vx = temp[j].vx;
-            particles[j].vy = temp[j].vy;
-            particles[j].brightness = temp[j].brightness;
+            // Update every particle
+            for (int j=0;j<N;j++)  
+            {update_particle(particles, temp, j, N, dt, G, e0);}
+
+            // Copy over result from temp to particles
+            for (int j=0;j<N;j++)  // Update every particle
+            {
+                particles[j].x = temp[j].x;
+                particles[j].y = temp[j].y;
+                particles[j].m = temp[j].m;
+                particles[j].vx = temp[j].vx;
+                particles[j].vy = temp[j].vy;
+                particles[j].brightness = temp[j].brightness;
+            }
         }
-    }
     }
 
     else if (graphics == 1)
     {
-        particle_t *temp = malloc(N * sizeof(particle_t));  // temporary array for storing results
-
-        
         InitializeGraphics(argv[0],windowWidth,windowWidth);
         SetCAxes(0,1);
         for (i=0; i<nsteps; i++)         // For every time step
@@ -215,8 +218,8 @@ int main(int argc, char *argv[])
 
 
     /*############### Print final data ##############*/
-    printf("Read final data:\n");
-    print_pos(particles,N);
+    //printf("Read final data:\n");
+    //print_pos(particles,N);
 
 
     /*############### Create output file ##############*/
@@ -235,6 +238,7 @@ int main(int argc, char *argv[])
 
     /*############### Free memory ##############*/
     free(particles);
+    free(temp);
 
     return 0;
 }
