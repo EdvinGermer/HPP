@@ -6,12 +6,58 @@ nsteps = 200
 char* input_dir= "/home/edge9521/HPP/A3/input_data/ellipse_N_00010.gal";
 char* correct_dir= "/home/edge9521/HPP/A3/ref_output_data/ellipse_N_00010_after200steps.gal";
 
+V1
+    Difference in output
+        Particle: 0
+            d_x          = 0.079085
+            d_y          = -0.092021
+            d_m          = 0.000000
+            d_vx         = 2.736626
+            d_vy         = 4.174424
+            d_brigthness = 0.000000
 
-Difference in output
-    Particle: 0
-         d_x          = 0.079085
-         d_y          = -0.092021
-         d_m          = 0.000000
-         d_vx         = 2.736626
-         d_vy         = 4.174424
-         d_brigthness = 0.000000
+V2
+    Difference in output
+        Particle: 0
+            d_x          = 0.000005
+            d_y          = -0.000026
+            d_m          = 0.000000
+            d_vx         = 0.015955
+            d_vy         = -0.227644
+            d_brigthness = 0.000000
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%% Other %%%%%%%%%%%%%%%%%%%%%%
+
+T0
+    Particle: A (before update)
+        x0 = 0.5000000000
+        vx0 = 6.5000000000
+        y0 = 0.2000000000
+        vy0 = 0.0000000000
+        m = 1.0000000000
+    Particle: B (before update)
+        x0 = 0.5000000000
+        vx0 = -6.5000000000
+        y0 = 0.8000000000
+        vy0 = 0.0000000000
+        m = 1.0000000000
+    
+
+T1
+    Particle: A (after update)
+        x0 = 0.5000650000
+        vx0 = 6.5000000000
+        y0 = 0.2000000000
+        vy0 = 0.0000000000
+        m = 1.0000000000
+    
+    Particle: B (after update)
+        x0 = 0.4999350000
+        vx0 = -6.4999998503
+        y0 = 0.7999999862
+        vy0 = -0.0013819675
+        m = 1.0000000000

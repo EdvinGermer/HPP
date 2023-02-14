@@ -21,8 +21,8 @@
 // ./galsim 600 /home/edge9521/HPP/A3/input_data/ellipse_N_01000.gal 1000 0.00001 1
 
 // N = 2
-// nsteps = 1000;
-// ./galsim 2 /home/edge9521/HPP/A3/input_data/circles_N_2.gal 1000 0.00001 1
+// nsteps = 200;
+// ./galsim 2 /home/edge9521/HPP/A3/input_data/circles_N_2.gal 200 0.00001 1
 
 // N = 4
 // nsteps = 10000;
@@ -64,11 +64,11 @@ void print_pos(particle_t* particles, int N)
 }
 
 /*############### Define update function ##############*/
-void update_particle(particle_t* particles, int i, double N, double dt, double G, double e0)
+void update_particle(particle_t* particles, particle_t* temp, int i, double N, double dt, double G, double e0)
 {
-    double Fx=0;
-    double Fy=0;
-    double r,r3, r_x, r_y;
+    double Fx=0.0;
+    double Fy=0.0;
+    double r, r3, r_x, r_y;
 
     // Calculate force
     for (int j=0; j<N; j++)   // Iterate over all particles
@@ -78,7 +78,7 @@ void update_particle(particle_t* particles, int i, double N, double dt, double G
             r_x = particles[i].x - particles[j].x;    // (x_i - x_j)
             r_y = particles[i].y - particles[j].y;    // (y_i - y_j)
 
-            r = sqrt( pow(r_x,2) + pow(r_y,2) );
+            r = sqrt( (pow(r_x,2)) + pow(r_y,2) );
             r3 = pow(r+e0,3);
 
             // Sum up all contributions in x and y directions
@@ -86,16 +86,21 @@ void update_particle(particle_t* particles, int i, double N, double dt, double G
             Fy += (particles[j].m/r3) * r_y;
         }
     }
-    Fx = -G*particles[i].m*Fx;
-    Fy = -G*particles[i].m*Fy;
+    Fx *= -G*particles[i].m;
+    Fy *= -G*particles[i].m;
 
     // Update velocity
-    particles[i].vx += dt*(Fx/particles[i].m);
-    particles[i].vy += dt*(Fy/particles[i].m);
+    temp[i].vx = particles[i].vx + dt*(Fx/particles[i].m);
+    temp[i].vy = particles[i].vy + dt*(Fy/particles[i].m);
 
     // Update position
-    particles[i].x += dt*particles[i].vx;
-    particles[i].y += dt*particles[i].vy;
+    temp[i].x = particles[i].x + dt*temp[i].vx;
+    temp[i].y = particles[i].y + dt*temp[i].vy;
+
+    // Set mass and brightness
+    temp[i].m = particles[i].m;
+    temp[i].brightness = particles[i].brightness;
+
 };
 
 
@@ -147,15 +152,32 @@ int main(int argc, char *argv[])
     /*############### Update positions ##############*/
     if (graphics == 0)
     {
-        for (i=0; i<nsteps; i++)         // For every time step
+        particle_t *temp = malloc(N * sizeof(particle_t));  // temporary array for storing results
+    
+    for (i=0; i<nsteps; i++)         // For every time step
+    {
+        // Update every particle
+        for (int j=0;j<N;j++)  
+        {update_particle(particles, temp, j, N, dt, G, e0);}
+
+        // Copy over result from temp to particles
+        for (int j=0;j<N;j++)  // Update every particle
         {
-            for (int idx=0;idx<N;idx++)  // Update every particle
-            {update_particle(particles,idx, N, dt, G, e0);}
+            particles[j].x = temp[j].x;
+            particles[j].y = temp[j].y;
+            particles[j].m = temp[j].m;
+            particles[j].vx = temp[j].vx;
+            particles[j].vy = temp[j].vy;
+            particles[j].brightness = temp[j].brightness;
         }
+    }
     }
 
     else if (graphics == 1)
     {
+        particle_t *temp = malloc(N * sizeof(particle_t));  // temporary array for storing results
+
+        
         InitializeGraphics(argv[0],windowWidth,windowWidth);
         SetCAxes(0,1);
         for (i=0; i<nsteps; i++)         // For every time step
@@ -164,7 +186,18 @@ int main(int argc, char *argv[])
             for (int idx=0;idx<N;idx++)  // Update every particle
             {
                 DrawCircle(particles[idx].x, particles[idx].y, L, W, circleRadius, circleColor);
-                update_particle(particles,idx, N, dt, G, e0);
+                update_particle(particles, temp, idx, N, dt, G, e0);
+            }
+
+            // Copy over result from temp to particles
+            for (int j=0;j<N;j++)  // Update every particle
+            {
+                particles[j].x = temp[j].x;
+                particles[j].y = temp[j].y;
+                particles[j].m = temp[j].m;
+                particles[j].vx = temp[j].vx;
+                particles[j].vy = temp[j].vy;
+                particles[j].brightness = temp[j].brightness;
             }
 
             Refresh();
