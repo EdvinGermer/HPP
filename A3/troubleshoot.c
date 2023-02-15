@@ -5,7 +5,7 @@
 
 // gcc -o troubleshoot troubleshoot.c -lm
 
-/*############### Define a struct for the particles ##############*/
+/*############### Define a structs ##############*/
 typedef struct particle{
     double x;
     double y;
@@ -15,8 +15,14 @@ typedef struct particle{
     double brightness;
 } particle_t;
 
+typedef struct temp{
+    double x;
+    double y;
+} temp_t;
+
+
 /*############### Define update function ##############*/
-void update_particle(particle_t* particles, particle_t* temp, int i, double N, double dt, double G, double e0)
+void update_particle(particle_t* particles, temp_t* temp, int i, double N, double dt, double G, double e0)
 {
     double Fx=0.0;
     double Fy=0.0;
@@ -42,17 +48,12 @@ void update_particle(particle_t* particles, particle_t* temp, int i, double N, d
     Fy *= -G*particles[i].m;
 
     // Update velocity
-    temp[i].vx = particles[i].vx + dt*(Fx/particles[i].m);
-    temp[i].vy = particles[i].vy + dt*(Fy/particles[i].m);
+    particles[i].vx += dt*(Fx/particles[i].m);
+    particles[i].vy += dt*(Fy/particles[i].m);
 
     // Update position
-    temp[i].x = particles[i].x + dt*temp[i].vx;
-    temp[i].y = particles[i].y + dt*temp[i].vy;
-
-    // Set mass and brightness
-    temp[i].m = particles[i].m;
-    temp[i].brightness = particles[i].brightness;
-
+    temp[i].x = particles[i].x + dt*particles[i].vx;
+    temp[i].y = particles[i].y + dt*particles[i].vy;
 };
 
 
@@ -71,7 +72,7 @@ int main(int argc, char *argv[])
     double e0 = 0.001;   // Gravity correctional term
     double dt = 0.00001; // Time step
 
-    /*############### Allocate memory ##############*/
+    /*############### Allocate memory for particles ##############*/
     particle_t *particles = malloc(N * sizeof(particle_t));
     if (particles == NULL) 
     {printf("ERROR: Could not allocate memory for %d particles\n", N);}
@@ -97,7 +98,7 @@ int main(int argc, char *argv[])
     fclose(correct_file);
     
     /*############### Run simulation ##############*/
-    particle_t *temp = malloc(N * sizeof(particle_t));  // temporary array for storing results
+    temp_t *temp = malloc(N * sizeof(temp_t));  // temporary array for storing results
     
     for (i=0; i<nsteps; i++)         // For every time step
     {
@@ -110,14 +111,9 @@ int main(int argc, char *argv[])
         {
             particles[j].x = temp[j].x;
             particles[j].y = temp[j].y;
-            particles[j].m = temp[j].m;
-            particles[j].vx = temp[j].vx;
-            particles[j].vy = temp[j].vy;
-            particles[j].brightness = temp[j].brightness;
         }
     }
 
-  
 
     /*############### Find worse performing datapoint ##############*/
     int worse_idx=0;
@@ -125,31 +121,60 @@ int main(int argc, char *argv[])
     double max=0;
     for (int j=0;j<N;j++)  
     {
-        temp2 = sqrt(pow(particles[j].x-correct[j].x,2)) + sqrt(pow(particles[j].y-correct[j].y,2));// + sqrt(pow(particles[j].vx-correct[j].vx,2)) + sqrt(pow(particles[j].vy-correct[j].vy,2));
+        temp2 = sqrt((particles[j].x-correct[j].x)*(particles[j].x-correct[j].x)) + (particles[j].y-correct[j].y)*(particles[j].y-correct[j].y);
         if (temp2>max)
         {
             max = temp2;
-            printf("pos_maxdiff = %0.16f\n",max);
             worse_idx = j;
         }
     }
+    printf("pos_maxdiff = %16.16f\n",max);
+
+
+    /*############### Create troubleshoot output file ##############*/
+    // Open file
+    FILE *file_res = fopen("test_result.gal", "wb");
+    if (file_res==NULL)
+    {printf("ERROR: Could not create file test_result.gal\n");}
+
+    // Write to the file
+    for (i = 0; i < N; i++)
+    {fwrite(&particles[i], sizeof(particle_t), 1, file_res);}
+
+    // Close the file
+    fclose(file_res);  
+
+
+    /*############### Load the troubleshoot output file ##############*/
+     particle_t *result = malloc(N * sizeof(particle_t));
+
+    FILE *result_file = fopen("./test_result.gal", "rb");
+    if (result_file == NULL)
+    {printf("ERROR: Could not open file \n");}
+
+    for (i=0;i<N;i++)
+    {fread(&result[i], sizeof(particle_t), 1, result_file);}
+    fclose(result_file);
+
+
 
 
     /*############### Print difference of worse index ##############*/
     printf("\nDifference in output\n");
     printf("    Particle: %d\n", worse_idx);
-    printf("         d_x          = %0.15f\n", particles[worse_idx].x-correct[worse_idx].x);
-    printf("         d_y          = %0.15f\n", particles[worse_idx].y-correct[worse_idx].y);
-    printf("         d_m          = %0.15f\n", particles[worse_idx].m-correct[worse_idx].m);
-    printf("         d_vx         = %0.15f\n", particles[worse_idx].vx-correct[worse_idx].vx);
-    printf("         d_vy         = %0.15f\n", particles[worse_idx].vy-correct[worse_idx].vy);
-    printf("         d_brigthness = %0.15f\n", particles[worse_idx].brightness-correct[worse_idx].brightness);
+    printf("         d_x          = %0.15f\n", result[worse_idx].x-correct[worse_idx].x);
+    printf("         d_y          = %0.15f\n", result[worse_idx].y-correct[worse_idx].y);
+    printf("         d_m          = %0.15f\n", result[worse_idx].m-correct[worse_idx].m);
+    printf("         d_vx         = %0.15f\n", result[worse_idx].vx-correct[worse_idx].vx);
+    printf("         d_vy         = %0.15f\n", result[worse_idx].vy-correct[worse_idx].vy);
+    printf("         d_brigthness = %0.15f\n", result[worse_idx].brightness-correct[worse_idx].brightness);
 
 
     /*############### Free memory ##############*/
     free(particles);
     free(correct);
     free(temp);
+    free(result);
 
     return 0;
 }

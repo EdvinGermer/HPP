@@ -14,18 +14,29 @@ typedef struct particle{
     double brightness;
 } particle_t;
 
-typedef struct temp{
-    double x;
-    double y;
-} temp_t;
-
 /*############### Graphics settings ##############*/
 const float circleRadius=0.005, circleColor=0;
 const int windowWidth=800;
 const int L=1, W=1;
 
+/*############### Print function ##############*/
+void print_pos(particle_t* particles, int N)
+{
+    printf("Read particle data:\n");
+    for (int i=0;i<N;i++)
+    {
+        printf("    Particle: %d\n", i);
+        printf("         x          = %f\n", particles[i].x);
+        printf("         y          = %f\n", particles[i].y);
+        printf("         m          = %f\n", particles[i].m);
+        printf("         vx         = %f\n", particles[i].vx);
+        printf("         vy         = %f\n", particles[i].vy);
+        printf("         brigthness = %f\n", particles[i].brightness);
+    }
+}
+
 /*############### Define update function ##############*/
-void update_particle(particle_t* particles, temp_t* temp, int i, double N, double dt, double G, double e0)
+void update_particle(particle_t* particles, particle_t* temp, int i, double N, double dt, double G, double e0)
 {
     double Fx=0.0;
     double Fy=0.0;
@@ -57,7 +68,11 @@ void update_particle(particle_t* particles, temp_t* temp, int i, double N, doubl
     // Update position
     temp[i].x = particles[i].x + dt*particles[i].vx;
     temp[i].y = particles[i].y + dt*particles[i].vy;
+
+
 };
+
+
 
 int main(int argc, char *argv[])
 {
@@ -73,12 +88,15 @@ int main(int argc, char *argv[])
     
     /*############### Initialize other variables ##############*/
     int i;
-    double G = 100.0/N;  // Gravity      
+    double G = 100/N;  // Gravity 
     double e0 = 0.001; // Gravity correctional term
 
     /*############### Allocate memory ##############*/
     particle_t *particles = malloc(N * sizeof(particle_t));
-    temp_t *temp = malloc(N * sizeof(temp_t));  // temporary array for storing results
+    if (particles == NULL) 
+    {printf("ERROR: Could not allocate memory for %d particles\n", N);}
+
+    particle_t *temp = malloc(N * sizeof(particle_t));  // temporary array for storing results
 
     /*############### Read data ##############*/
     FILE *file = fopen(filename, "rb");
@@ -88,6 +106,7 @@ int main(int argc, char *argv[])
     for (i=0;i<N;i++)
     {fread(&particles[i], sizeof(particle_t), 1, file);}
     fclose(file);
+
 
     /*############### Update positions ##############*/
     if (graphics == 0)
@@ -126,6 +145,7 @@ int main(int argc, char *argv[])
                 particles[j].x = temp[j].x;
                 particles[j].y = temp[j].y;
             }
+
             Refresh();
             usleep(3000); // avoid screen flickering
         }  
@@ -138,15 +158,19 @@ int main(int argc, char *argv[])
     else
     {printf("ERROR: Invalid input for graphics '%d'\n", graphics);}
 
+
     /*############### Create output file ##############*/
-    FILE *file_res = fopen("result.gal", "wb"); // Open file
+    // Open file
+    FILE *file_res = fopen("result.gal", "wb");
     if (file_res==NULL)
     {printf("ERROR: Could not create file result.gal\n");}
 
+    // Write to the file
     for (i = 0; i < N; i++)
-    {fwrite(&particles[i], sizeof(particle_t), 1, file_res);}  // Write to the file
+    {fwrite(&particles[i], sizeof(particle_t), 1, file_res);}
 
-    fclose(file_res);  // Close the file
+    // Close the file
+    fclose(file_res);  
 
     /*############### Free memory ##############*/
     free(particles);

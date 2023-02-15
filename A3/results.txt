@@ -1,0 +1,23 @@
+%%%%%%%%%%%%%%%%%%%%%% Default code running the tests %%%%%%%%%%%%%%%%%%%%%%
+
+N = 10  :  nsteps = 200  
+
+
+
+N = 100  :  nsteps = 200
+
+
+
+N = 500  :  nsteps = 200
+
+
+
+N = 1000  :  nsteps = 200
+
+
+
+N = 2000  :  nsteps = 200
+
+
+
+N = 3000  :  nsteps = 100

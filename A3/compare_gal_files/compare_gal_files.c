@@ -5,26 +5,15 @@
 // gcc -o compare_gal_files compare_gal_files.c -lm
 
 
-// N = 10
-// nsteps = 200
-// ./compare_gal_files/compare_gal_files 10 /home/edge9521/HPP/A3/result.gal /home/edge9521/HPP/A3/ref_output_data/ellipse_N_00010_after200steps.gal
-
-
-// N = 100
-// nsteps = 200
-// ./compare_gal_files/compare_gal_files 100 /home/edge9521/HPP/A3/result.gal /home/edge9521/HPP/A3/ref_output_data/ellipse_N_00100_after200steps.gal
-
-// N = 500
-// nsteps = 200
-// ./compare_gal_files/compare_gal_files 500 /home/edge9521/HPP/A3/result.gal /home/edge9521/HPP/A3/ref_output_data/ellipse_N_00500_after200steps.gal
-
-
-
 static void update_maxdiff(double dx, double dy, double* maxabsdiff) {
   double absdiff = sqrt(dx*dx+dy*dy);
   if(absdiff > *maxabsdiff)
     *maxabsdiff = absdiff;
 }
+
+
+
+
 
 int read_doubles_from_file(int n, double* p, const char* fileName) {
   /* Open input file and determine its size. */
@@ -60,6 +49,9 @@ int read_doubles_from_file(int n, double* p, const char* fileName) {
   return 0;
 }
 
+
+
+
 /* The idea with the check_that_numbers_seem_OK() function is to check
    that there are no strange numbers like "nan" that may give problems
    when we try to compare the numbers later. */
@@ -78,6 +70,11 @@ int check_that_numbers_seem_OK(int n, double* buf) {
   else
     return -1;
 }
+
+
+
+
+
 
 int main(int argc, const char* argv[]) {
   if(argc != 4) {
@@ -112,6 +109,7 @@ int main(int argc, const char* argv[]) {
   /* Compare positions and velocities. */
   double pos_maxdiff = 0;
   double vel_maxdiff = 0;
+  int errorCount = 0;
   int i;
   for(i = 0; i < N; i++) {
     double pos_dx = buf1[i*6+0] - buf2[i*6+0];
@@ -130,7 +128,17 @@ int main(int argc, const char* argv[]) {
     }
     update_maxdiff(pos_dx, pos_dy, &pos_maxdiff);
     update_maxdiff(vel_dx, vel_dy, &vel_maxdiff);
+
+    double error = sqrt(pos_dx*pos_dx+pos_dy*pos_dy);
+
+    if (error>0.01)
+    {
+      printf("Large error found! {%16.16f}\n", error);
+      printf("  idx = %d\n", i);
+      errorCount++;
+    }
   }
   printf("pos_maxdiff = %16.16f\n", pos_maxdiff);
+  printf("%d errors found\n",errorCount);
   return 0;
 }
