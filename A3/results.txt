@@ -1,23 +1,78 @@
 %%%%%%%%%%%%%%%%%%%%%% Default code running the tests %%%%%%%%%%%%%%%%%%%%%%
+./galsim 3000 /home/edge9521/HPP/A3/input_data/ellipse_N_03000.gal 100 0.00001 0
 
 N = 10  :  nsteps = 200  
-
+    real    0m0,022s
+    user    0m0,012s
+    sys     0m0,008s
 
 
 N = 100  :  nsteps = 200
-
+    real    0m0,505s
+    user    0m0,498s
+    sys     0m0,004s
 
 
 N = 500  :  nsteps = 200
-
+    real    0m12,164s
+    user    0m12,153s
+    sys     0m0,001s
 
 
 N = 1000  :  nsteps = 200
-
+    real    0m48,184s
+    user    0m48,169s
+    sys     0m0,002s
 
 
 N = 2000  :  nsteps = 200
-
+    real    3m13,189s
+    user    3m13,168s
+    sys     0m0,003s
 
 
 N = 3000  :  nsteps = 100
+    real    3m36,946s
+    user    3m36,923s
+    sys     0m0,009s
+
+
+
+%%%%%%%%%%%%%%%%%%%%%% Default code running the tests BUT WITH O3 flag %%%%%%%%%%%%%%%%%%%%%%
+./galsim 3000 /home/edge9521/HPP/A3/input_data/ellipse_N_03000.gal 100 0.00001 0
+
+N = 10  :  nsteps = 200  
+    real    0m0,019s     1.15x faster
+    user    0m0,013s
+    sys     0m0,003s
+
+
+N = 100  :  nsteps = 200
+    real    0m0,188s      2.68x faster
+    user    0m0,176s
+    sys     0m0,004s
+
+
+N = 500  :  nsteps = 200
+    real    0m3,967s      3.066x faster
+    user    0m3,960s
+    sys     0m0,003s
+
+
+N = 1000  :  nsteps = 200
+    real    0m15,765s     3.056x faster
+    user    0m15,747s
+    sys     0m0,009s
+ 
+
+N = 2000  :  nsteps = 200
+    real    1m3,014s      3.066x faster
+    user    1m2,987s
+    sys     0m0,010s
+ 
+
+N = 3000  :  nsteps = 100
+    real    1m9,384s      3.127x faster
+    user    1m9,372s
+    sys     0m0,004s
+    
