@@ -1,4 +1,4 @@
-CFLAGS= -march=native -ffast-math -O3
+CFLAGS= -Wall -ffast-math -march=native -O3
 INCLUDES=-I/opt/X11/include
 LDFLAGS=-L/opt/X11/lib -lX11 -lm
 

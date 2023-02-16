@@ -29,24 +29,46 @@ const float circleRadius=0.005, circleColor=0;
 const int windowWidth=800;
 const int L=1, W=1;
 
-/*############### Define update function ##############*/
-void update_particle(particle_t* restrict particles, temp_t* restrict temp, int i, const double N, const double dt, const double G, const double e0)
+
+
+/*############### Timing function ##############*/
+static double get_wall_seconds() {
+  struct timeval tv;
+  gettimeofday(&tv, NULL);
+  double seconds = tv.tv_sec + (double)tv.tv_usec / 1000000;
+  return seconds;
+}
+
+
+/*############### Define get distance function ##############*/
+double** get_dist(double** restrict distances, particle_t* restrict particles, const double N)
+{
+    for (int i=0;i<N;i++)
+        for (int j=i+1;j<N;j++)
+        {
+            distances[i][j] = sqrt((particles[i].x-particles[j].x)*(particles[i].x-particles[j].x) + (particles[i].y-particles[j].y)*(particles[i].y-particles[j].y));
+            distances[j][i] = distances[i][j];
+        }
+    return distances;
+}
+
+
+/*############### Define update function for each particle ##############*/
+void update_particle(particle_t* restrict particles, temp_t* restrict temp, double** restrict distances, int i, const double N, const double dt, const double G, const double e0)
 {
     int j;
     double Fx=0.0;
     double Fy=0.0;
-    double r, r3, r_x, r_y;
+    double r3, r_x, r_y;
 
     // Calculate force
     for (j=0; j<N-4; j+=4)   // Iterate over all particles
     {
         if (j!=i)             // Do not calculate for the same particle
         {
-            r_x = particles[i].x - particles[j].x;    // (x_i - x_j)
-            r_y = particles[i].y - particles[j].y;    // (y_i - y_j)
-
-            r = sqrt( r_x*r_x + r_y*r_y );                                 // MADE CHANGES HERE
-            r3 = (r+e0)*(r+e0)*(r+e0);                                     // MADE CHANGES HERE
+            r_x = particles[i].x - particles[j].x; 
+            r_y = particles[i].y - particles[j].y; 
+            r3 = (distances[i][j]+e0)*(distances[i][j]+e0)*(distances[i][j]+e0); 
 
             // Sum up all contributions in x and y directions
             Fx += (particles[j].m/r3) * r_x;
@@ -54,11 +76,9 @@ void update_particle(particle_t* restrict particles, temp_t* restrict temp, int 
         }
         if ((j+1)!=i)             // Do not calculate for the same particle
         {
-            r_x = particles[i].x - particles[j+1].x;    // (x_i - x_j)
-            r_y = particles[i].y - particles[j+1].y;    // (y_i - y_j)
-
-            r = sqrt( r_x*r_x + r_y*r_y );                                 // MADE CHANGES HERE
-            r3 = (r+e0)*(r+e0)*(r+e0);                                     // MADE CHANGES HERE
+            r_x = particles[i].x - particles[j+1].x; 
+            r_y = particles[i].y - particles[j+1].y; 
+            r3 = (distances[i][j+1]+e0)*(distances[i][j+1]+e0)*(distances[i][j+1]+e0); 
 
             // Sum up all contributions in x and y directions
             Fx += (particles[j+1].m/r3) * r_x;
@@ -66,11 +86,9 @@ void update_particle(particle_t* restrict particles, temp_t* restrict temp, int 
         }
         if ((j+2)!=i)             // Do not calculate for the same particle
         {
-            r_x = particles[i].x - particles[j+2].x;    // (x_i - x_j)
-            r_y = particles[i].y - particles[j+2].y;    // (y_i - y_j)
-
-            r = sqrt( r_x*r_x + r_y*r_y );                                 // MADE CHANGES HERE
-            r3 = (r+e0)*(r+e0)*(r+e0);                                     // MADE CHANGES HERE
+            r_x = particles[i].x - particles[j+2].x; 
+            r_y = particles[i].y - particles[j+2].y; 
+            r3 = (distances[i][j+2]+e0)*(distances[i][j+2]+e0)*(distances[i][j+2]+e0); 
 
             // Sum up all contributions in x and y directions
             Fx += (particles[j+2].m/r3) * r_x;
@@ -78,11 +96,9 @@ void update_particle(particle_t* restrict particles, temp_t* restrict temp, int 
         }
         if ((j+3)!=i)             // Do not calculate for the same particle
         {
-            r_x = particles[i].x - particles[j+3].x;    // (x_i - x_j)
-            r_y = particles[i].y - particles[j+3].y;    // (y_i - y_j)
-
-            r = sqrt( r_x*r_x + r_y*r_y );                                 // MADE CHANGES HERE
-            r3 = (r+e0)*(r+e0)*(r+e0);                                     // MADE CHANGES HERE
+            r_x = particles[i].x - particles[j+3].x; 
+            r_y = particles[i].y - particles[j+3].y; 
+            r3 = (distances[i][j+3]+e0)*(distances[i][j+3]+e0)*(distances[i][j+3]+e0); 
 
             // Sum up all contributions in x and y directions
             Fx += (particles[j+3].m/r3) * r_x;
@@ -96,18 +112,15 @@ void update_particle(particle_t* restrict particles, temp_t* restrict temp, int 
     {
         if (j!=i)             // Do not calculate for the same particle
         {
-            r_x = particles[i].x - particles[j].x;    // (x_i - x_j)
-            r_y = particles[i].y - particles[j].y;    // (y_i - y_j)
-
-            r = sqrt( r_x*r_x + r_y*r_y );                              
-            r3 = (r+e0)*(r+e0)*(r+e0);                                   
+            r_x = particles[i].x - particles[j].x; 
+            r_y = particles[i].y - particles[j].y; 
+            r3 = (distances[i][j]+e0)*(distances[i][j]+e0)*(distances[i][j]+e0); 
 
             // Sum up all contributions in x and y directions
             Fx += (particles[j].m/r3) * r_x;
             Fy += (particles[j].m/r3) * r_y;
         }
     }
-
 
     // Update velocity
     particles[i].vx += dt*Fx*-G;
@@ -139,6 +152,12 @@ int main(int argc, char *argv[])
     particle_t *particles = malloc(N * sizeof(particle_t));
     temp_t *temp = malloc(N * sizeof(temp_t));  // temporary array for storing results
 
+    int size = N;
+    double** distances = (double**)malloc(size * sizeof(double*));
+    for (int i=0;i<size; i++)
+        distances[i] = (double*)malloc(size * sizeof(double));
+
+
     /*############### Read data ##############*/
     FILE *file = fopen(filename, "rb");
     if (file == NULL)
@@ -148,14 +167,19 @@ int main(int argc, char *argv[])
     {fread(&particles[i], sizeof(particle_t), 1, file);}
     fclose(file);
 
-    /*############### Update positions ##############*/
+    /*############### Run Simulation ##############*/
+    double time1 = get_wall_seconds();
+    
     if (graphics == 0)
     {
         for (i=0; i<nsteps; i++)         // For every time step
         {
+            // get all distances
+            distances = get_dist(distances, particles, N);
+
             // Update every particle
             for (int j=0;j<N;j++)  
-            {update_particle(particles, temp, j, N, dt, G, e0);}
+            {update_particle(particles, temp, distances, j, N, dt, G, e0);}
 
             // Copy over result from temp to particles
             for (int j=0;j<N;j++)  // Update every particle
@@ -166,17 +190,20 @@ int main(int argc, char *argv[])
         }
     }
 
-    else if (graphics == 1)
+    else if (graphics == 1) 
     {
         InitializeGraphics(argv[0],windowWidth,windowWidth);
         SetCAxes(0,1);
         for (i=0; i<nsteps; i++)         // For every time step
         {
+            // get all distances
+            distances = get_dist(distances, particles, N);
+
             ClearScreen();
             for (int idx=0;idx<N;idx++)  // Update every particle
             {
                 DrawCircle(particles[idx].x, particles[idx].y, L, W, circleRadius, circleColor);
-                update_particle(particles, temp, idx, N, dt, G, e0);
+                update_particle(particles, temp, distances, idx, N, dt, G, e0);
             }
 
             // Copy over result from temp to particles
@@ -197,6 +224,9 @@ int main(int argc, char *argv[])
     else
     {printf("ERROR: Invalid input for graphics '%d'\n", graphics);}
 
+
+    //printf("\n Simulation took %7.3f wall seconds.\n", get_wall_seconds()-time1);  
+
     /*############### Create output file ##############*/
     FILE *file_res = fopen("result.gal", "wb"); // Open file
     if (file_res==NULL)
@@ -210,6 +240,7 @@ int main(int argc, char *argv[])
     /*############### Free memory ##############*/
     free(particles);
     free(temp);
+    free(distances);
 
     return 0;
 }
