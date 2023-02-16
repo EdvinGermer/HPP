@@ -7,16 +7,16 @@
 // testing the code with N = 500 and 200 steps seems to be sufficient to tell if performance is improved
 // time ./galsim 500 /home/edge9521/HPP/A3/input_data/ellipse_N_05000.gal 200 0.00001 0
 
-// Time to beat = 1,238s
+// Time to beat = 1,148s
 
 /*############### Define a struct for the particles ##############*/
 typedef struct{
     double x;
-    double y;
-    double m;
+    double y; 
+    const double m;
     double vx;
     double vy;
-    double brightness;
+    const double brightness;
 } particle_t;
 
 typedef struct{
@@ -30,14 +30,15 @@ const int windowWidth=800;
 const int L=1, W=1;
 
 /*############### Define update function ##############*/
-void update_particle(particle_t* particles, temp_t* temp, int i, double N, double dt, double G, double e0)
+void update_particle(particle_t* restrict particles, temp_t* restrict temp, int i, const double N, const double dt, const double G, const double e0)
 {
+    int j;
     double Fx=0.0;
     double Fy=0.0;
     double r, r3, r_x, r_y;
 
     // Calculate force
-    for (int j=0; j<N; j++)   // Iterate over all particles
+    for (j=0; j<N-4; j+=4)   // Iterate over all particles
     {
         if (j!=i)             // Do not calculate for the same particle
         {
@@ -51,13 +52,66 @@ void update_particle(particle_t* particles, temp_t* temp, int i, double N, doubl
             Fx += (particles[j].m/r3) * r_x;
             Fy += (particles[j].m/r3) * r_y;
         }
+        if ((j+1)!=i)             // Do not calculate for the same particle
+        {
+            r_x = particles[i].x - particles[j+1].x;    // (x_i - x_j)
+            r_y = particles[i].y - particles[j+1].y;    // (y_i - y_j)
+
+            r = sqrt( r_x*r_x + r_y*r_y );                                 // MADE CHANGES HERE
+            r3 = (r+e0)*(r+e0)*(r+e0);                                     // MADE CHANGES HERE
+
+            // Sum up all contributions in x and y directions
+            Fx += (particles[j+1].m/r3) * r_x;
+            Fy += (particles[j+1].m/r3) * r_y;
+        }
+        if ((j+2)!=i)             // Do not calculate for the same particle
+        {
+            r_x = particles[i].x - particles[j+2].x;    // (x_i - x_j)
+            r_y = particles[i].y - particles[j+2].y;    // (y_i - y_j)
+
+            r = sqrt( r_x*r_x + r_y*r_y );                                 // MADE CHANGES HERE
+            r3 = (r+e0)*(r+e0)*(r+e0);                                     // MADE CHANGES HERE
+
+            // Sum up all contributions in x and y directions
+            Fx += (particles[j+2].m/r3) * r_x;
+            Fy += (particles[j+2].m/r3) * r_y;
+        }
+        if ((j+3)!=i)             // Do not calculate for the same particle
+        {
+            r_x = particles[i].x - particles[j+3].x;    // (x_i - x_j)
+            r_y = particles[i].y - particles[j+3].y;    // (y_i - y_j)
+
+            r = sqrt( r_x*r_x + r_y*r_y );                                 // MADE CHANGES HERE
+            r3 = (r+e0)*(r+e0)*(r+e0);                                     // MADE CHANGES HERE
+
+            // Sum up all contributions in x and y directions
+            Fx += (particles[j+3].m/r3) * r_x;
+            Fy += (particles[j+3].m/r3) * r_y;
+        }
     }
-    Fx *= -G*particles[i].m;
-    Fy *= -G*particles[i].m;
+
+
+    // If there is a remainder
+    for (j; j<N; j++) 
+    {
+        if (j!=i)             // Do not calculate for the same particle
+        {
+            r_x = particles[i].x - particles[j].x;    // (x_i - x_j)
+            r_y = particles[i].y - particles[j].y;    // (y_i - y_j)
+
+            r = sqrt( r_x*r_x + r_y*r_y );                              
+            r3 = (r+e0)*(r+e0)*(r+e0);                                   
+
+            // Sum up all contributions in x and y directions
+            Fx += (particles[j].m/r3) * r_x;
+            Fy += (particles[j].m/r3) * r_y;
+        }
+    }
+
 
     // Update velocity
-    particles[i].vx += dt*(Fx/particles[i].m);
-    particles[i].vy += dt*(Fy/particles[i].m);
+    particles[i].vx += dt*Fx*-G;
+    particles[i].vy += dt*Fy*-G;
 
     // Update position
     temp[i].x = particles[i].x + dt*particles[i].vx;
@@ -70,16 +124,16 @@ int main(int argc, char *argv[])
     if (argc != 6)
     {printf("Error: This function takes 5 arguments, but got %d\n", argc - 1);}
     
-    int N = atoi(argv[1]);                   // Number of stars
-    char* filename = argv[2];                // filename
-    double nsteps = strtod(argv[3], NULL);   // How many steps to simulate
-    double dt = strtod(argv[4], NULL);       // Timestep
-    int graphics = atoi(argv[5]);            // Graphics on or off
+    const int N = atoi(argv[1]);                   // Number of stars
+    const char* filename = argv[2];                // filename
+    const double nsteps = strtod(argv[3], NULL);   // How many steps to simulate
+    const double dt = strtod(argv[4], NULL);       // Timestep
+    const int graphics = atoi(argv[5]);            // Graphics on or off
     
     /*############### Initialize other variables ##############*/
     int i;
-    double G = 100.0/N;  // Gravity      
-    double e0 = 0.001; // Gravity correctional term
+    const double G = 100.0/N;  // Gravity      
+    const double e0 = 0.001; // Gravity correctional term
 
     /*############### Allocate memory ##############*/
     particle_t *particles = malloc(N * sizeof(particle_t));

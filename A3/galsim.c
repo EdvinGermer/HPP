@@ -5,19 +5,18 @@
 #include <unistd.h>
 
 // testing the code with N = 500 and 200 steps seems to be sufficient to tell if performance is improved
-// time ./galsim 500 /home/edge9521/HPP/A3/input_data/ellipse_N_00500.gal 200 0.00001 0
-// time ./galsim 3000 /home/edge9521/HPP/A3/input_data/ellipse_N_03000.gal 100 0.00001 0
+// time ./galsim 500 /home/edge9521/HPP/A3/input_data/ellipse_N_05000.gal 200 0.00001 0
 
-// Time to beat = 1,218s
+// Time to beat = 1,148s
 
 /*############### Define a struct for the particles ##############*/
 typedef struct{
     double x;
-    double y;
-    const double m;
+    double y; 
+    double m;
     double vx;
     double vy;
-    const double brightness;
+    double brightness;
 } particle_t;
 
 typedef struct{
@@ -30,98 +29,61 @@ const float circleRadius=0.005, circleColor=0;
 const int windowWidth=800;
 const int L=1, W=1;
 
-/*############### Define update function ##############*/
-void update_particle(particle_t* particles, temp_t* temp, int i, double N, double dt, double G, double e0)
+
+
+/*############### Timing function ##############*/
+static double get_wall_seconds() {
+  struct timeval tv;
+  gettimeofday(&tv, NULL);
+  double seconds = tv.tv_sec + (double)tv.tv_usec / 1000000;
+  return seconds;
+}
+
+
+/*############### Define get distance function ##############*/
+double** get_dist(double** distances, particle_t* particles, double N)
 {
-    int j;
+    for (int i=0;i<N;i++)
+        for (int j=i+1;j<N;j++)
+        {
+            distances[i][j] = sqrt((particles[i].x-particles[j].x)*(particles[i].x-particles[j].x) + (particles[i].y-particles[j].y)*(particles[i].y-particles[j].y));
+            distances[j][i] = distances[i][j];
+        }
+    return distances;
+}
+
+
+/*############### Define update function for each particle ##############*/
+void update_particle(particle_t* particles, temp_t* temp, double** distances, int i, double N, double dt, double G, double e0)
+{
     double Fx=0.0;
     double Fy=0.0;
-    double r, r3, r_x, r_y;
+    double r3, r_x, r_y;
 
     // Calculate force
-    for (j=0; j<N-4; j+=4)   // Iterate over all particles
+    for (int j=0; j<N; j++)   // Iterate over all particles
     {
         if (j!=i)             // Do not calculate for the same particle
         {
             r_x = particles[i].x - particles[j].x;    // (x_i - x_j)
             r_y = particles[i].y - particles[j].y;    // (y_i - y_j)
-            r = sqrt( r_x*r_x + r_y*r_y ); 
-            r3 = (r+e0)*(r+e0)*(r+e0);
-
-            // Sum up all contributions in x and y directions
-            Fx += (particles[j].m/r3) * r_x;
-            Fy += (particles[j].m/r3) * r_y;
-        }
-        if ((j+1)!=i)             // Do not calculate for the same particle
-        {
-            r_x = particles[i].x - particles[j+1].x;    // (x_i - x_j)
-            r_y = particles[i].y - particles[j+1].y;    // (y_i - y_j)
-            r = sqrt( r_x*r_x + r_y*r_y ); 
-            r3 = (r+e0)*(r+e0)*(r+e0);
-
-            // Sum up all contributions in x and y directions
-            Fx += (particles[j+1].m/r3) * r_x;
-            Fy += (particles[j+1].m/r3) * r_y;
-        }
-        if ((j+2)!=i)             // Do not calculate for the same particle
-        {
-            r_x = particles[i].x - particles[j+2].x;    // (x_i - x_j)
-            r_y = particles[i].y - particles[j+2].y;    // (y_i - y_j)
-            r = sqrt( r_x*r_x + r_y*r_y ); 
-            r3 = (r+e0)*(r+e0)*(r+e0);
-
-            // Sum up all contributions in x and y directions
-            Fx += (particles[j+2].m/r3) * r_x;
-            Fy += (particles[j+2].m/r3) * r_y;
-        }
-        if ((j+3)!=i)             // Do not calculate for the same particle
-        {
-            r_x = particles[i].x - particles[j+3].x;    // (x_i - x_j)
-            r_y = particles[i].y - particles[j+3].y;    // (y_i - y_j)
-            r = sqrt( r_x*r_x + r_y*r_y ); 
-            r3 = (r+e0)*(r+e0)*(r+e0);
-
-            // Sum up all contributions in x and y directions
-            Fx += (particles[j+3].m/r3) * r_x;
-            Fy += (particles[j+3].m/r3) * r_y;
-        }
-    }
-    
-    
-    // If there is a remainder
-    for (; j < N; j++) 
-    {
-        if (j!=i)             // Do not calculate for the same particle
-        {
-            r_x = particles[i].x - particles[j].x;    // (x_i - x_j)
-            r_y = particles[i].y - particles[j].y;    // (y_i - y_j)
-
-            r = sqrt( r_x*r_x + r_y*r_y ); 
-            r3 = (r+e0)*(r+e0)*(r+e0);
+       
+            r3 = (distances[i][j]+e0)*(distances[i][j]+e0)*(distances[i][j]+e0);  
 
             // Sum up all contributions in x and y directions
             Fx += (particles[j].m/r3) * r_x;
             Fy += (particles[j].m/r3) * r_y;
         }
     }
-        
-    
-    
-    Fx *= -G*particles[i].m;
-    Fy *= -G*particles[i].m;
 
     // Update velocity
-    particles[i].vx += dt*(Fx/particles[i].m);
-    particles[i].vy += dt*(Fy/particles[i].m);
+    particles[i].vx += dt*Fx*-G;
+    particles[i].vy += dt*Fy*-G;
 
     // Update position
     temp[i].x = particles[i].x + dt*particles[i].vx;
     temp[i].y = particles[i].y + dt*particles[i].vy;
 };
-
-
-
-
 
 int main(int argc, char *argv[])
 {
@@ -129,20 +91,30 @@ int main(int argc, char *argv[])
     if (argc != 6)
     {printf("Error: This function takes 5 arguments, but got %d\n", argc - 1);}
     
-    const int N = atoi(argv[1]);                   // Number of stars
-    const char* filename = argv[2];                // filename
-    const double nsteps = strtod(argv[3], NULL);   // How many steps to simulate
-    const double dt = strtod(argv[4], NULL);       // Timestep
-    const int graphics = atoi(argv[5]);            // Graphics on or off
+    int N = atoi(argv[1]);                   // Number of stars
+    char* filename = argv[2];                // filename
+    double nsteps = strtod(argv[3], NULL);   // How many steps to simulate
+    double dt = strtod(argv[4], NULL);       // Timestep
+    int graphics = atoi(argv[5]);            // Graphics on or off
     
     /*############### Initialize other variables ##############*/
     int i;
-    const double G = 100.0/N;  // Gravity      
-    const double e0 = 0.001; // Gravity correctional term
+    double G = 100.0/N;  // Gravity      
+    double e0 = 0.001; // Gravity correctional term
 
     /*############### Allocate memory ##############*/
     particle_t *particles = malloc(N * sizeof(particle_t));
     temp_t *temp = malloc(N * sizeof(temp_t));  // temporary array for storing results
+
+    int size = N;
+    double** distances = (double**)malloc(size * sizeof(double*));
+    for (int i=0;i<size; i++)
+        distances[i] = (double*)malloc(size * sizeof(double));
+
+
+    double** pos_vec = (double**)malloc(size * sizeof(double*));
+    for (int i=0;i<size; i++)
+        pos_vec[i] = (double*)malloc(size * sizeof(double));
 
     /*############### Read data ##############*/
     FILE *file = fopen(filename, "rb");
@@ -151,16 +123,21 @@ int main(int argc, char *argv[])
 
     for (i=0;i<N;i++)
     {fread(&particles[i], sizeof(particle_t), 1, file);}
-    fclose(file); 
+    fclose(file);
 
     /*############### Update positions ##############*/
+    double time1 = get_wall_seconds();
+    
     if (graphics == 0)
     {
         for (i=0; i<nsteps; i++)         // For every time step
         {
+            // get all distances
+            distances = get_dist(distances, particles, N);
+
             // Update every particle
             for (int j=0;j<N;j++)  
-            {update_particle(particles, temp, j, N, dt, G, e0);}
+            {update_particle(particles, temp, distances, j, N, dt, G, e0);}
 
             // Copy over result from temp to particles
             for (int j=0;j<N;j++)  // Update every particle
@@ -171,17 +148,20 @@ int main(int argc, char *argv[])
         }
     }
 
-    else if (graphics == 1)
+    else if (graphics == 1) 
     {
         InitializeGraphics(argv[0],windowWidth,windowWidth);
         SetCAxes(0,1);
         for (i=0; i<nsteps; i++)         // For every time step
         {
+            // get all distances
+            distances = get_dist(distances, particles, N);
+
             ClearScreen();
             for (int idx=0;idx<N;idx++)  // Update every particle
             {
                 DrawCircle(particles[idx].x, particles[idx].y, L, W, circleRadius, circleColor);
-                update_particle(particles, temp, idx, N, dt, G, e0);
+                update_particle(particles, temp, distances, idx, N, dt, G, e0);
             }
 
             // Copy over result from temp to particles
@@ -202,6 +182,8 @@ int main(int argc, char *argv[])
     else
     {printf("ERROR: Invalid input for graphics '%d'\n", graphics);}
 
+
+    printf("\n Simulation took %7.3f wall seconds.\n", get_wall_seconds()-time1);  
     /*############### Create output file ##############*/
     FILE *file_res = fopen("result.gal", "wb"); // Open file
     if (file_res==NULL)
@@ -215,6 +197,8 @@ int main(int argc, char *argv[])
     /*############### Free memory ##############*/
     free(particles);
     free(temp);
+    free(distances);
+    free(pos_vec);
 
-    return 0; 
+    return 0;
 }

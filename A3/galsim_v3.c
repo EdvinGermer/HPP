@@ -29,8 +29,41 @@ const float circleRadius=0.005, circleColor=0;
 const int windowWidth=800;
 const int L=1, W=1;
 
-/*############### Define update function ##############*/
-void update_particle(particle_t* particles, temp_t* temp, int i, double N, double dt, double G, double e0)
+
+
+/*############### Timing function ##############*/
+static double get_wall_seconds() {
+  struct timeval tv;
+  gettimeofday(&tv, NULL);
+  double seconds = tv.tv_sec + (double)tv.tv_usec / 1000000;
+  return seconds;
+}
+
+
+/*############### Define get distance function ##############*/
+double** get_dist(double** distances, double** x_mat, double** y_mat, particle_t* particles, int N)
+{
+    for (int i=0;i<N;i++)
+        for (int j=i+1;j<N;j++)
+        {
+            double dx = particles[i].x-particles[j].x;
+            double dy = particles[i].y-particles[j].y;
+
+            x_mat[i][j] = dx;
+            x_mat[j][i] = -dx;
+
+            y_mat[i][j] = dy;
+            y_mat[j][i] = -dy;
+
+            distances[i][j] = sqrt(dx*dx+dy*dy);
+            distances[j][i] = distances[i][j];
+        }
+    return distances, x_mat, y_mat;
+}
+
+
+/*############### Define update function for each particle ##############*/
+void update_particle(particle_t* particles, temp_t* temp, double** distances, double** x_mat, double** y_mat, int i, double N, double dt, double G, double e0)
 {
     double Fx=0.0;
     double Fy=0.0;
@@ -41,23 +74,14 @@ void update_particle(particle_t* particles, temp_t* temp, int i, double N, doubl
     {
         if (j!=i)             // Do not calculate for the same particle
         {
-            r_x = particles[i].x - particles[j].x;    // (x_i - x_j)
-            r_y = particles[i].y - particles[j].y;    // (y_i - y_j)
-
-            r = sqrt( r_x*r_x + r_y*r_y );                                 // MADE CHANGES HERE
-            r3 = (r+e0)*(r+e0)*(r+e0);                                     // MADE CHANGES HERE
-
-            // Sum up all contributions in x and y directions
-            Fx += (particles[j].m/r3) * r_x;
-            Fy += (particles[j].m/r3) * r_y;
+            Fx += (particles[j].m/((distances[i][j]+e0)*(distances[i][j]+e0)*(distances[i][j]+e0))) * x_mat[i][j];
+            Fy += (particles[j].m/((distances[i][j]+e0)*(distances[i][j]+e0)*(distances[i][j]+e0))) * y_mat[i][j];
         }
     }
-    Fx *= -G*particles[i].m;
-    Fy *= -G*particles[i].m;
 
     // Update velocity
-    particles[i].vx += dt*(Fx/particles[i].m);
-    particles[i].vy += dt*(Fy/particles[i].m);
+    particles[i].vx += dt*Fx*-G;
+    particles[i].vy += dt*Fy*-G;
 
     // Update position
     temp[i].x = particles[i].x + dt*particles[i].vx;
@@ -85,6 +109,20 @@ int main(int argc, char *argv[])
     particle_t *particles = malloc(N * sizeof(particle_t));
     temp_t *temp = malloc(N * sizeof(temp_t));  // temporary array for storing results
 
+    int size = N;
+    double** distances = (double**)malloc(size * sizeof(double*));
+    for (int i=0;i<size; i++)
+        distances[i] = (double*)malloc(size * sizeof(double));
+
+
+    double** x_mat = (double**)malloc(size * sizeof(double*));
+    for (int i=0;i<size; i++)
+        x_mat[i] = (double*)malloc(size * sizeof(double));
+
+    double** y_mat = (double**)malloc(size * sizeof(double*));
+    for (int i=0;i<size; i++)
+        y_mat[i] = (double*)malloc(size * sizeof(double));
+
     /*############### Read data ##############*/
     FILE *file = fopen(filename, "rb");
     if (file == NULL)
@@ -95,13 +133,18 @@ int main(int argc, char *argv[])
     fclose(file);
 
     /*############### Update positions ##############*/
+    double time1 = get_wall_seconds();
+    
     if (graphics == 0)
     {
         for (i=0; i<nsteps; i++)         // For every time step
         {
+            // get all distances
+            distances, x_mat, y_mat = get_dist(distances,x_mat, y_mat, particles,N);
+
             // Update every particle
             for (int j=0;j<N;j++)  
-            {update_particle(particles, temp, j, N, dt, G, e0);}
+            {update_particle(particles, temp, distances, x_mat, y_mat, j, N, dt, G, e0);}
 
             // Copy over result from temp to particles
             for (int j=0;j<N;j++)  // Update every particle
@@ -112,17 +155,20 @@ int main(int argc, char *argv[])
         }
     }
 
-    else if (graphics == 1)
+    else if (graphics == 1) 
     {
         InitializeGraphics(argv[0],windowWidth,windowWidth);
         SetCAxes(0,1);
         for (i=0; i<nsteps; i++)         // For every time step
         {
+            // get all distances
+            distances, x_mat, y_mat = get_dist(distances,x_mat, y_mat, particles,N);
+
             ClearScreen();
             for (int idx=0;idx<N;idx++)  // Update every particle
             {
                 DrawCircle(particles[idx].x, particles[idx].y, L, W, circleRadius, circleColor);
-                update_particle(particles, temp, idx, N, dt, G, e0);
+                update_particle(particles, temp, distances, x_mat, y_mat, idx, N, dt, G, e0);
             }
 
             // Copy over result from temp to particles
@@ -143,6 +189,8 @@ int main(int argc, char *argv[])
     else
     {printf("ERROR: Invalid input for graphics '%d'\n", graphics);}
 
+
+    printf("\n Simulation took %7.3f wall seconds.\n", get_wall_seconds()-time1);  
     /*############### Create output file ##############*/
     FILE *file_res = fopen("result.gal", "wb"); // Open file
     if (file_res==NULL)
@@ -156,6 +204,9 @@ int main(int argc, char *argv[])
     /*############### Free memory ##############*/
     free(particles);
     free(temp);
+    free(distances);
+    free(x_mat);
+    free(y_mat);
 
     return 0;
 }

@@ -118,6 +118,9 @@ N = 3000  :  nsteps = 100
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% V3 code %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+CPU Model name: Intel(R) Xeon(R) CPU  E5520  @ 2.27GHz
+
 Baseline:
 
     N = 500  :  nsteps = 200
@@ -130,59 +133,31 @@ Baseline:
 Changes that made performance worse:
     Inlining
 
-Improvements:
+Improvement attemps:
     Loop Unrolling
     -ffast-math flag
     -march=native flag
     const keyword before all constant variables
+    restrict keyword before pointers in function
+    Calling update in cache sized blocks
 
 
-./galsim 3000 /home/edge9521/HPP/A3/input_data/ellipse_N_03000.gal 100 0.00001 0
 
-N = 10  :  nsteps = 200  
-
-N = 100  :  nsteps = 200
 
 N = 500  :  nsteps = 200
+    real    0m1,140s
+    user    0m1,135s
+    sys     0m0,006s
 
 N = 1000  :  nsteps = 200
-
-N = 2000  :  nsteps = 200
-
-N = 3000  :  nsteps = 100
-
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% V4 code %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Baseline:
-    N = 10  :  nsteps = 200  
-        real    0m0,022s
-    N = 100  :  nsteps = 200
-        real    0m0,505s
-    N = 500  :  nsteps = 200
-        real    0m12,164s
-    N = 1000  :  nsteps = 200
-        real    0m48,184s
-    N = 2000  :  nsteps = 200
-        real    3m13,189s
-    N = 3000  :  nsteps = 100
-        real    3m36,946s
-
-Improvements:
-
-
-./galsim 3000 /home/edge9521/HPP/A3/input_data/ellipse_N_03000.gal 100 0.00001 0
-
-N = 10  :  nsteps = 200  
-
-N = 100  :  nsteps = 200
-
-N = 500  :  nsteps = 200
-
-N = 1000  :  nsteps = 200
-
-N = 2000  :  nsteps = 200
+    real    0m4,521s
+    user    0m4,514s
+    sys     0m0,004s
 
 N = 3000  :  nsteps = 100
+    real    0m20,289s
+    user    0m20,281s
+    sys     0m0,006s
+
+
+
