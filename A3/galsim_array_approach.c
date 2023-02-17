@@ -4,25 +4,16 @@
 #include "graphics.h"
 #include <unistd.h>
 
-// testing the code with N = 500 and 200 steps seems to be sufficient to tell if performance is improved
-// time ./galsim 500 /home/edge9521/HPP/A3/input_data/ellipse_N_05000.gal 200 0.00001 0
-
-// Time to beat = 1,148s
-
 /*############### Define a struct for the particles ##############*/
 typedef struct{
     double x;
     double y; 
-    const double m;
+    double m;
     double vx;
     double vy;
-    const double brightness;
+    double brightness;
 } particle_t;
 
-typedef struct{
-    double x;
-    double y;
-} temp_t;
 
 /*############### Graphics settings ##############*/
 const float circleRadius=0.005, circleColor=0;
@@ -44,81 +35,34 @@ double** get_dist(double** restrict distances, particle_t* restrict particles, c
 
 
 /*############### Define update function for each particle ##############*/
-void update_particle(particle_t* restrict particles, temp_t* restrict temp, double** restrict distances, int i, const double N, const double dt, const double G, const double e0)
+void update_particle(double* restrict pos, double* restrict vel, double* restrict temp, double** restrict distances, int i, const double N, const double dt, const double G, const double e0)
 {
-    int j;
     double Fx=0.0;
     double Fy=0.0;
     double r3, r_x, r_y;
 
     // Calculate force
-    for (j=0; j<N-4; j+=4)   // Iterate over all particles
+    for (int j=0; j<N; j++)   // Iterate over all particles
     {
         if (j!=i)             // Do not calculate for the same particle
         {
-            r_x = particles[i].x - particles[j].x; 
-            r_y = particles[i].y - particles[j].y; 
-            r3 = (distances[i][j]+e0)*(distances[i][j]+e0)*(distances[i][j]+e0); 
+            r_x = pos[3*i] - pos[3*j]; 
+            r_y = pos[3*(i+1)] - pos[3*(j+1)]; 
+            r3 = (distances[i][j]+e0)*(distances[i][j]+e0)*(distances[i][j]+e0);  
 
             // Sum up all contributions in x and y directions
-            Fx += (particles[j].m/r3) * r_x;
-            Fy += (particles[j].m/r3) * r_y;
-        }
-        if ((j+1)!=i)             // Do not calculate for the same particle
-        {
-            r_x = particles[i].x - particles[j+1].x; 
-            r_y = particles[i].y - particles[j+1].y; 
-            r3 = (distances[i][j+1]+e0)*(distances[i][j+1]+e0)*(distances[i][j+1]+e0); 
-
-            // Sum up all contributions in x and y directions
-            Fx += (particles[j+1].m/r3) * r_x;
-            Fy += (particles[j+1].m/r3) * r_y;
-        }
-        if ((j+2)!=i)             // Do not calculate for the same particle
-        {
-            r_x = particles[i].x - particles[j+2].x; 
-            r_y = particles[i].y - particles[j+2].y; 
-            r3 = (distances[i][j+2]+e0)*(distances[i][j+2]+e0)*(distances[i][j+2]+e0); 
-
-            // Sum up all contributions in x and y directions
-            Fx += (particles[j+2].m/r3) * r_x;
-            Fy += (particles[j+2].m/r3) * r_y;
-        }
-        if ((j+3)!=i)             // Do not calculate for the same particle
-        {
-            r_x = particles[i].x - particles[j+3].x; 
-            r_y = particles[i].y - particles[j+3].y; 
-            r3 = (distances[i][j+3]+e0)*(distances[i][j+3]+e0)*(distances[i][j+3]+e0); 
-
-            // Sum up all contributions in x and y directions
-            Fx += (particles[j+3].m/r3) * r_x;
-            Fy += (particles[j+3].m/r3) * r_y;
-        }
-    }
-
-
-    // If there is a remainder
-    for (j; j<N; j++) 
-    {
-        if (j!=i)             // Do not calculate for the same particle
-        {
-            r_x = particles[i].x - particles[j].x; 
-            r_y = particles[i].y - particles[j].y; 
-            r3 = (distances[i][j]+e0)*(distances[i][j]+e0)*(distances[i][j]+e0); 
-
-            // Sum up all contributions in x and y directions
-            Fx += (particles[j].m/r3) * r_x;
-            Fy += (particles[j].m/r3) * r_y;
+            Fx += pos[3*(j+2)]/r3* r_x;
+            Fy += pos[3*(j+2)]/r3 * r_y; 
         }
     }
 
     // Update velocity
-    particles[i].vx += dt*Fx*-G;
-    particles[i].vy += dt*Fy*-G;
+    vel[3*i] += dt*Fx*-G;
+    vel[3*(i+1)] += dt*Fy*-G;
 
     // Update position
-    temp[i].x = particles[i].x + dt*particles[i].vx;
-    temp[i].y = particles[i].y + dt*particles[i].vy;
+    temp[2*i] = pos[3*i] + dt*vel[3*i];
+    temp[2*(i+1)] = pos[3*(i+1)] + dt*vel[3*(i+1)];
 };
 
 int main(int argc, char *argv[])
@@ -140,7 +84,10 @@ int main(int argc, char *argv[])
 
     /*############### Allocate memory ##############*/
     particle_t *particles = malloc(N * sizeof(particle_t));
-    temp_t *temp = malloc(N * sizeof(temp_t));  // temporary array for storing results
+    
+    double* pos = (double *) malloc(3*N*sizeof(double));
+    double* vel = (double *) malloc(2*N*sizeof(double));
+    double* temp = (double *) malloc(2*N*sizeof(double));
 
     int size = N;
     double** distances = (double**)malloc(size * sizeof(double*));
@@ -159,6 +106,18 @@ int main(int argc, char *argv[])
 
     /*############### Run Simulation ##############*/
     
+    // Copy particle data to iterabel arrays
+    for (int j=0;j<N;j++) 
+    {
+        pos[3*j] = particles[j].x;
+        pos[3*(j+1)] = particles[j].y;
+        pos[3*(j+2)] = particles[j].m;
+
+        vel[3*(j)] = particles[j].vx;
+        vel[3*(j+1)] = particles[j].vy;
+    }
+
+
     if (graphics == 0)
     {
         for (i=0; i<nsteps; i++)         // For every time step
@@ -168,13 +127,13 @@ int main(int argc, char *argv[])
 
             // Update every particle
             for (int j=0;j<N;j++)  
-            {update_particle(particles, temp, distances, j, N, dt, G, e0);}
+            {update_particle(pos,vel,temp,distances, j, N, dt, G, e0);}
 
             // Copy over result from temp to particles
             for (int j=0;j<N;j++)  // Update every particle
             {
-                particles[j].x = temp[j].x;
-                particles[j].y = temp[j].y;
+                pos[3*j] = temp[2*j];
+                pos[3*(j+1)] = temp[2*(j+1)];
             }
         }
     }
@@ -192,14 +151,14 @@ int main(int argc, char *argv[])
             for (int idx=0;idx<N;idx++)  // Update every particle
             {
                 DrawCircle(particles[idx].x, particles[idx].y, L, W, circleRadius, circleColor);
-                update_particle(particles, temp, distances, idx, N, dt, G, e0);
+                update_particle(pos, vel, temp, distances, idx, N, dt, G, e0);
             }
 
             // Copy over result from temp to particles
             for (int j=0;j<N;j++)  // Update every particle
             {
-                particles[j].x = temp[j].x;
-                particles[j].y = temp[j].y;
+                pos[3*j] = temp[2*j];
+                pos[3*(j+1)] = temp[2*(j+1)];
             }
             Refresh();
             usleep(3000); // avoid screen flickering
@@ -212,6 +171,19 @@ int main(int argc, char *argv[])
 
     else
     {printf("ERROR: Invalid input for graphics '%d'\n", graphics);}
+
+
+    // iterables back to particles struct
+    for (int j=0;j<N;j++) 
+    {
+        particles[j].x = pos[3*(j)];
+        particles[j].y = pos[3*(j+1)];
+        particles[j].m = pos[3*(j+2)];
+
+        particles[j].vx = vel[3*j];
+        particles[j].vy = vel[3*(j+1)];
+    }
+
 
 
     /*############### Create output file ##############*/
@@ -228,6 +200,8 @@ int main(int argc, char *argv[])
     free(particles);
     free(temp);
     free(distances);
+    free(pos);
+    free(vel);
 
     return 0;
 }

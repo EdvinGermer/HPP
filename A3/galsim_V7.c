@@ -30,20 +30,10 @@ const int windowWidth=800;
 const int L=1, W=1;
 
 
-
-/*############### Timing function ##############*/
-static double get_wall_seconds() {
-  struct timeval tv;
-  gettimeofday(&tv, NULL);
-  double seconds = tv.tv_sec + (double)tv.tv_usec / 1000000;
-  return seconds;
-}
-
-
 /*############### Define get distance function ##############*/
 double** get_dist(double** restrict distances, particle_t* restrict particles, const double N)
 {
-    for (int i=0;i<N;i++)
+    for (int i=0;i<N-1;i++)
         for (int j=i+1;j<N;j++)
         {
             distances[i][j] = sqrt((particles[i].x-particles[j].x)*(particles[i].x-particles[j].x) + (particles[i].y-particles[j].y)*(particles[i].y-particles[j].y));
@@ -168,7 +158,6 @@ int main(int argc, char *argv[])
     fclose(file);
 
     /*############### Run Simulation ##############*/
-    double time1 = get_wall_seconds();
     
     if (graphics == 0)
     {
@@ -224,8 +213,6 @@ int main(int argc, char *argv[])
     else
     {printf("ERROR: Invalid input for graphics '%d'\n", graphics);}
 
-
-    //printf("\n Simulation took %7.3f wall seconds.\n", get_wall_seconds()-time1);  
 
     /*############### Create output file ##############*/
     FILE *file_res = fopen("result.gal", "wb"); // Open file

@@ -29,7 +29,6 @@ const float circleRadius=0.005, circleColor=0;
 const int windowWidth=800;
 const int L=1, W=1;
 
-
 /*############### Define get distance function ##############*/
 double** get_dist(double** restrict distances, particle_t* restrict particles, const double N)
 {

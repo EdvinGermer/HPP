@@ -25,15 +25,6 @@ const float circleRadius=0.005, circleColor=0;
 const int windowWidth=800;
 const int L=1, W=1;
 
-
-/*############### Timing function ##############*/
-static double get_wall_seconds() {
-  struct timeval tv;
-  gettimeofday(&tv, NULL);
-  double seconds = tv.tv_sec + (double)tv.tv_usec / 1000000;
-  return seconds;
-}
-
 /*############### Define update function ##############*/
 void update_particle(particle_t* particles, temp_t* temp, int i, double N, double dt, double G, double e0)
 {
@@ -100,8 +91,7 @@ int main(int argc, char *argv[])
     fclose(file);
 
     /*############### Run Simulation ##############*/
-    double time1 = get_wall_seconds();
-    
+ 
     if (graphics == 0)
     {
         for (i=0; i<nsteps; i++)         // For every time step
@@ -149,9 +139,6 @@ int main(int argc, char *argv[])
 
     else
     {printf("ERROR: Invalid input for graphics '%d'\n", graphics);}
-
-
-    //printf("\n Simulation took %7.3f wall seconds.\n", get_wall_seconds()-time1);  
 
     /*############### Create output file ##############*/
     FILE *file_res = fopen("result.gal", "wb"); // Open file
