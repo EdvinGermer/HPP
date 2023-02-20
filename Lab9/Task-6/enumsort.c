@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
-#include <sys/time.h>
+#include <sys/time.h> 
 
 #define NUM_THREADS	4
 #define len 200000
