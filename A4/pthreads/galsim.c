@@ -36,11 +36,11 @@ typedef struct{
 typedef struct{
     double x;
     double y;
-} temp_pos_t;
+} temp_pos_pos_t;
 
 typedef struct{
     particle_t* particles;
-    temp_pos_t* temp;
+    temp_pos_pos_t* temp_pos;
     double** distances;
     int start,end;
 }update_args_t;
@@ -83,7 +83,7 @@ void* update_particle(void* input)
     update_args_t* update_args = (update_args_t*) input;
     
     particle_t* particles = update_args->particles;
-    temp_pos_t* temp = update_args->temp;
+    temp_pos_pos_t* temp_pos = update_args->temp_pos;
     double** distances = update_args->distances;
     int start = update_args->start;
     int end = update_args->end;
@@ -114,8 +114,8 @@ void* update_particle(void* input)
 
         // Update position
         pthread_mutex_lock(&m);
-        temp[i].x = particles[i].x + dt*particles[i].vx;
-        temp[i].y = particles[i].y + dt*particles[i].vy;
+        temp_pos[i].x = particles[i].x + dt*particles[i].vx;
+        temp_pos[i].y = particles[i].y + dt*particles[i].vy;
         pthread_mutex_unlock(&m);
     }
     return NULL;
@@ -137,7 +137,7 @@ int main(int argc, char *argv[])
 
     /*############### Allocate memory ##############*/
     particle_t* particles = malloc(N * sizeof(particle_t));
-    temp_pos_t* temp = malloc(N * sizeof(temp_pos_t));  // temporary array for storing results
+    temp_pos_pos_t* temp_pos = malloc(N * sizeof(temp_pos_pos_t));  // temp_posorary array for storing results
 
     double** distances = (double**)malloc(N * sizeof(double*));
     for (int i=0;i<N; i++)
@@ -163,7 +163,7 @@ int main(int argc, char *argv[])
         {
             update_args[t].particles = particles;
             update_args[t].distances = distances;
-            update_args[t].temp = temp;
+            update_args[t].temp_pos = temp_pos;
 
             dist_args[t].particles = particles;
             dist_args[t].distances = distances;
@@ -210,8 +210,8 @@ int main(int argc, char *argv[])
             // SAVE RESULT FROM THIS TIMESTEP AND PLOT
             for (int j=0;j<N;j++) 
             {                
-                particles[j].x = temp[j].x;
-                particles[j].y = temp[j].y;
+                particles[j].x = temp_pos[j].x;
+                particles[j].y = temp_pos[j].y;
             }
         }
     }
@@ -256,8 +256,8 @@ int main(int argc, char *argv[])
             for (int j=0;j<N;j++)
             {
                 DrawCircle(particles[j].x, particles[j].y, L, W, circleRadius, circleColor);
-                particles[j].x = temp[j].x;
-                particles[j].y = temp[j].y;
+                particles[j].x = temp_pos[j].x;
+                particles[j].y = temp_pos[j].y;
             }
             Refresh();
             usleep(3000); // avoid screen flickering
@@ -284,7 +284,7 @@ int main(int argc, char *argv[])
 
     /*############### Free memory ##############*/
     free(particles);
-    free(temp);
+    free(temp_pos);
     free(distances);
 
     return 0;
