@@ -1,15 +1,24 @@
 #include <stdio.h>
 #include <omp.h>
 
+// gcc -fopenmp -o omptest omptest.c
+
 typedef struct DataForThread {
   double A;
   double B;
+  double result;
   int x;
   int y;
 } DataForThread_t;
 
 void thread_func(DataForThread_t* p) {
-  printf("This is inside thread_func()!\n");
+  printf("This is the arguments inside thread_func()!\n");
+  printf("    A = %f\n", p->A);
+  printf("    B = %f\n", p->B);
+  printf("    x = %d\n", p->x);
+  printf("    y = %d\n\n", p->y);
+
+  p->result = (p->A) * (p->B);
 }
 
 int main(int argc, char** argv) {
@@ -35,6 +44,14 @@ int main(int argc, char** argv) {
     /* Call thread_func and give it a pointer to arr[id] as input. */
     thread_func(&arr[id]);
   }
+
+
+for (int i=0; i<nThreads; i++)
+{
+  printf("Thread %d\n",i);
+  printf("  arr[%d].res = %f\n",i,arr[i].result);
+}
+  
 
   return 0;
 }

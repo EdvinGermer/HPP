@@ -182,6 +182,9 @@ int main(int argc, char *argv[])
     /*############### Free memory ##############*/
     free(particles);
     free(temp);
+    
+    for (int i = 0; i < N; i++)
+        free(distances[i]);
     free(distances);
 
     return 0;

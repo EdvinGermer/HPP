@@ -6,13 +6,16 @@
 #include <pthread.h>
 
 
-// ./galsim 100 /home/edge9521/HPP/A4/pthreads/input_data/ellipse_N_00100.gal 2000 0.00001 1
-// ./galsim 500 /home/edge9521/HPP/A4/pthreads/input_data/ellipse_N_00500.gal 2000 0.00001 1
-// time ./galsim 3000 /home/edge9521/HPP/A4/pthreads/input_data/ellipse_N_03000.gal 100 0.00001 0
+// ./galsim 10 /home/edge9521/HPP/A4/pthreads/input_data/ellipse_N_00010.gal 2000 0.00001 1 8
+// ./galsim 100 /home/edge9521/HPP/A4/pthreads/input_data/ellipse_N_00100.gal 2000 0.00001 1 8
+// ./galsim 500 /home/edge9521/HPP/A4/pthreads/input_data/ellipse_N_00500.gal 2000 0.00001 1 8
+// ./galsim 3000 /home/edge9521/HPP/A4/pthreads/input_data/ellipse_N_03000.gal 1000 0.00001 1 8
+
+// time ./galsim 3000 /home/edge9521/HPP/A4/pthreads/input_data/ellipse_N_03000.gal 100 0.00001 0 8
 
 
 /*############### Define global variables ##############*/
-int NUM_THREADS	= 8;
+int NUM_THREADS;
 pthread_mutex_t m;
 
 int N;                  
@@ -124,16 +127,17 @@ void* update_particle(void* input)
 int main(int argc, char *argv[])
 {
     /*############### Read arguments ##############*/
-    if (argc != 6)
-    {printf("Error: This function takes 5 arguments, but got %d\n", argc - 1);}
+    if (argc != 7)
+    {printf("Error: This function takes 6 arguments, but got %d\n", argc - 1);}
     
     N = atoi(argv[1]);                   // Number of stars
-    filename = argv[2];                // filename
-    nsteps = strtod(argv[3], NULL);   // How many steps to simulate
-    dt = strtod(argv[4], NULL);       // Timestep
+    filename = argv[2];                  // filename
+    nsteps = strtod(argv[3], NULL);      // How many steps to simulate
+    dt = strtod(argv[4], NULL);          // Timestep
     graphics = atoi(argv[5]);            // Graphics on or off
-    G = 100.0/N;  // Gravity      
-    e0 = 0.001; // Gravity correctional term
+    NUM_THREADS = atoi(argv[6]);         // How many threads to use
+    G = 100.0/N;                         // Gravity      
+    e0 = 0.001;                          // Gravity correctional term
 
     /*############### Allocate memory ##############*/
     particle_t* particles = malloc(N * sizeof(particle_t));
@@ -285,6 +289,10 @@ int main(int argc, char *argv[])
     /*############### Free memory ##############*/
     free(particles);
     free(temp_pos);
+    
+    
+    for (int i = 0; i < N; i++)
+        free(distances[i]);
     free(distances);
 
     return 0;

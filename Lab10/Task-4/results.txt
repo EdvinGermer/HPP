@@ -1,0 +1,31 @@
+%%%%%%%%%%%%%%%%%% PRINTING THE ARGUMENTS EACH THREAD HAS TO WORK WITH %%%%%%%%%%%%%%%%%%
+
+This is the arguments inside thread_func()!
+    A = 3.700000
+    B = 1.200000
+    x = 88
+    y = 77
+
+This is the arguments inside thread_func()!
+    A = 2.200000
+    B = 8.800000
+    x = 444
+    y = 555
+
+
+%%%%%%%%%%%%%%%%%% ADD COMPUTATION AND WRITE RESULT TO STRUCT %%%%%%%%%%%%%%%%%%
+
+A = 2.200000
+B = 8.800000
+x = 444
+y = 555
+
+A = 3.700000
+B = 1.200000
+x = 88
+y = 77
+
+Thread 0
+  arr[0].res = 4.440000
+Thread 1
+  arr[1].res = 19.360000

@@ -1,0 +1,23 @@
+Serial code:
+        Serial code took   1.026 wall seconds.
+        2360 primes in the range 1->21000
+
+Parallel code with 1 threads:
+        Parallel code took   1.015 wall seconds.
+        2360 primes in the range 1->21000
+
+Parallel code with 2 threads:
+        Parallel code took   0.508 wall seconds.
+        2360 primes in the range 1->21000
+
+Parallel code with 4 threads:                      (With 4 threads we get 3.77x faster so roughly 4 times faster)
+        Parallel code took   0.269 wall seconds.
+        2360 primes in the range 1->21000  
+
+Parallel code with 8 threads:
+        Parallel code took   0.216 wall seconds.
+        2360 primes in the range 1->21000
+
+    Parallel code with 16 threads:
+        Parallel code took   0.304 wall seconds.
+        2360 primes in the range 1->21000

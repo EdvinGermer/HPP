@@ -1,0 +1,25 @@
+##################### RUNNING THE CODE AS IS #####################
+
+This is the main() function before the parallel block, nThreads = 4
+This is the main() function after the parallel block
+sum = 120750
+.
+.
+.
+sum = 121000
+sum = 130099
+sum = 136794
+
+
+
+##################### USING #pragma omp critical  #####################
+
+This is the main() function before the parallel block, nThreads = 4
+This is the main() function after the parallel block
+sum = sum = 400000
+.
+.
+.
+sum = 400000
+sum = 400000
+sum = 400000

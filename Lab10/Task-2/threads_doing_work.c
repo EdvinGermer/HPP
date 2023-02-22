@@ -1,4 +1,9 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <omp.h>
+
+// gcc -o threads_doing_work threads_doing_work.c
+// gcc -fopenmp -o threads_doing_work threads_doing_work.c
 
 void do_some_work() {
   printf("Now I am going to do some work...\n");
@@ -12,10 +17,16 @@ void do_some_work() {
 
 int main(int argc, char** argv) {
 
-#pragma omp parallel num_threads(3)
+int n = atoi(argv[1]);
+
+double start_time = omp_get_wtime();
+#pragma omp parallel num_threads(n)
   {
     do_some_work();
   }
+double end_time = omp_get_wtime();
 
+printf("Wall time is %f\n",end_time-start_time);
+  
   return 0;
 }

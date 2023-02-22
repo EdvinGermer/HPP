@@ -1,0 +1,82 @@
+######################## RUNNING THE CODE AS IS ########################
+
+Bonjour!
+
+
+######################## RUNNING THE CODE WITH -fopenmp FLAG ########################
+
+Bonjour!
+Bonjour!
+Bonjour!
+Bonjour!
+Bonjour!
+
+######################## CHANING TO 10 THREADS ########################
+
+Bonjour!
+Bonjour!
+Bonjour!
+Bonjour!
+Bonjour!
+Bonjour!
+Bonjour!
+Bonjour!
+Bonjour!
+Bonjour!
+
+
+######################## REMOVE NUM_THREADS(x) ########################
+
+Bonjour!
+Bonjour!
+Bonjour!
+Bonjour!
+Bonjour!
+Bonjour!
+Bonjour!
+Bonjour!
+Bonjour!
+Bonjour!
+Bonjour!
+Bonjour!
+Bonjour!
+Bonjour!
+Bonjour!
+Bonjour!
+
+
+We get the default number of threads which in this case is 16.
+
+
+######################## CHANGE DEFAULT NUMBER OF THREADS) ########################
+
+Display default
+    echo $OMP_NUM_THREADS
+
+Change default   
+    export OMP_NUM_THREADS=3      (without recompiling you can change threads)
+
+Remove change to default    
+    unset OMP_NUM_THREADS
+
+
+
+
+######################## USING omp_set_num_threads(x) ########################
+
+set "omp_set_num_threads(6)" before pragma is called in function then recompile
+
+Bonjour!
+Bonjour!
+Bonjour!
+Bonjour!
+Bonjour!
+Bonjour!
+
+
+
+######################## TRY A COMBINATION ########################
+
+export OMP_NUM_THREADS=3 + set "omp_set_num_threads(6)"
+
+Still gives 6 "Bonjour!" becuase omp_set_num_threads(6) has priority

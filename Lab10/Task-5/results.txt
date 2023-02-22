@@ -1,0 +1,68 @@
+###################### NA=7e8, NB=1e8 ######################
+
+This is the main() function starting.
+This is the main() function after the parallel block.
+result_A : 4900000000
+result_B : 700000000
+totalSum : 5600000000
+Walltime is 2.055353s
+
+Multiple threads visible in TOP
+
+
+
+###################### NA=4e8, NB=4e8 ######################
+
+This is the main() function starting.
+This is the main() function after the parallel block.
+result_A : 2800000000
+result_B : 2800000000
+totalSum : 5600000000
+Walltime is 1.179537s
+
+
+###################### NA=0, NB=8e8 ######################
+
+This is the main() function starting.
+This is the main() function after the parallel block.
+result_A : 0
+result_B : 5600000000
+totalSum : 5600000000
+Wall time is 2.237022s
+
+
+2.23/1.17 = 1.9    (approx 2x times performance when work is split evenly)
+
+
+
+###################### INCREASING AMOUNT OF WORK AND DIVIDE UNEVENLY ######################
+
+What happens to CPU usage in top?
+
+NA = 1e8
+NB = 7e8
+
+
+idle
+        PID   USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND 
+        29940 edge9521  20   0   23100   4900   4012 R   0,7   0,0   0:03.22 top     
+
+
+
+shortly after running
+        PID   USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND 
+        31416 edge9521  20   0   11264   1016    916 S 177,8   0,0   0:06.52 Ntest   
+
+
+After some time (when first thread is finished)
+        PID   USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND 
+        31062 edge9521  20   0   11264   1036    936 S 100,0   0,0   0:18.77 Ntest   
+
+
+
+
+It seems to behave like Pthreads where CPU time is not being used when a thread is finished
+
+
+
+

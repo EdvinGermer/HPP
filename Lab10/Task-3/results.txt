@@ -1,0 +1,30 @@
+###################### RUNNING CODE AS IS ######################
+
+This is inside thread_func()!
+This is inside thread_func()!
+This is inside thread_func()!
+This is inside thread_func()!
+
+
+omp_get_num_threads() tells you how many threads are currently active
+inside of a parallel region
+
+omp_get_max_threads() tells you the maximum
+number of threads that can be used in any parallel region.
+
+
+###################### PRINT OUT AVAILABLE THREADS AND CURRENT THREAD ######################
+
+RUN 1
+  Thread 0 out of 3
+  Thread 3 out of 3
+  Thread 2 out of 3
+  Thread 1 out of 3
+
+RUN 2
+  Thread 2 out of 3
+  Thread 0 out of 3
+  Thread 1 out of 3
+  Thread 3 out of 3
+
+
