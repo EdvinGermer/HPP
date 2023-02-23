@@ -16,7 +16,6 @@
 
 /*############### Define global variables ##############*/
 int NUM_THREADS;
-pthread_mutex_t m;
 
 int N;                  
 char* filename;   
@@ -116,10 +115,8 @@ void* update_particle(void* input)
         particles[i].vy += dt*Fy*-G;
 
         // Update position
-        pthread_mutex_lock(&m);
         temp_pos[i].x = particles[i].x + dt*particles[i].vx;
         temp_pos[i].y = particles[i].y + dt*particles[i].vy;
-        pthread_mutex_unlock(&m);
     }
     return NULL;
 };
@@ -174,8 +171,6 @@ int main(int argc, char *argv[])
         }
 
     /*############### Run Simulation ##############*/
-    pthread_mutex_init(&m, NULL);
-    
     if (graphics == 0)
     {
         for (int i=0; i<nsteps; i++)         // For every time step
@@ -274,8 +269,6 @@ int main(int argc, char *argv[])
 
     else
     {printf("ERROR: Invalid input for graphics '%d'\n", graphics);}
-
-    pthread_mutex_destroy(&m);
     /*############### Create output file ##############*/
     FILE *file_res = fopen("result.gal", "wb"); // Open file
     if (file_res==NULL)

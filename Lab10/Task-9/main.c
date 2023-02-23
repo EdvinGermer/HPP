@@ -4,11 +4,11 @@
 #include "sort_funcs.h"
 
 static double get_wall_seconds() {
-  struct timeval tv;
+  struct timeval tv; 
   gettimeofday(&tv, NULL);
   double seconds = tv.tv_sec + (double)tv.tv_usec / 1000000;
-  return seconds;
-}
+  return seconds; 
+} 
 
 static int count_values(const intType* list, int n, intType x) {
   int count = 0;
@@ -21,12 +21,16 @@ static int count_values(const intType* list, int n, intType x) {
 }
 
 int main(int argc, char* argv[]) {
-  if(argc != 2) {
-    printf("Please give 1 argument: N (number of elements to sort).\n");
+  if(argc != 3) {
+    printf("Please give 2 argument: N (number of elements to sort) and nThreads (how many threads to use)\n");
     return -1;
   }
   int N = atoi(argv[1]);
+  int nThreads = atoi(argv[2]);
+  
   printf("N = %d\n", N);
+  printf("nThreads = %d\n",nThreads);
+
   if(N < 1) {
     printf("Error: (N < 1).\n");
     return -1;
@@ -41,13 +45,23 @@ int main(int argc, char* argv[]) {
   int count7 = count_values(list_to_sort, N, 7);
   printf("Before sort: the number 7 occurs %d times in the list.\n", count7);
 
+
+
+
   // Sort list
   double time1 = get_wall_seconds();
-  merge_sort(list_to_sort, N);
+
+  merge_sort(list_to_sort, 0,N, nThreads);
   printf("Sorting list with length %d took %7.3f wall seconds.\n", N, get_wall_seconds()-time1);  
+
+
 
   int count7_again = count_values(list_to_sort, N, 7);
   printf("After sort : the number 7 occurs %d times in the list.\n", count7_again);
+
+
+
+
 
   // Check that list is really sorted
   for(i = 0; i < N-1; i++) {

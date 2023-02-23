@@ -1,0 +1,73 @@
+##################### Testing nested parallelism ##################### 
+
+For nThreads = 2
+
+Nested parallelism is disabled
+  Thread 0 out of 1
+  Thread 1 out of 1
+
+Nested parallelism is enabled
+  Thread 0 out of 1
+  Thread 1 out of 1
+  Thread 1 out of 1
+  Thread 0 out of 1
+
+
+##################### Running merge sort as is #####################
+
+Output:
+    N = 5.000.000
+    Before sort: the number 7 occurs 50019 times in the list.
+    Sorting list with length 5000000 took   0.931 wall seconds.
+    After sort : the number 7 occurs 50019 times in the list.
+    OK, list is sorted!
+
+    N = 100.000.000
+    Before sort: the number 7 occurs 1000511 times in the list.
+    Sorting list with length 100000000 took  20.187 wall seconds.
+    After sort : the number 7 occurs 1000511 times in the list.
+    OK, list is sorted!
+
+
+
+
+##################### Running merge sort with nThreads #####################
+
+2 nThreads
+  N = 5000000
+  nThreads = 2
+  Before sort: the number 7 occurs 50019 times in the list.
+  Sorting list with length 5000000 took   0.524 wall seconds.        1.78x faster
+  After sort : the number 7 occurs 50019 times in the list.
+  OK, list is sorted!
+
+  N = 100000000
+  nThreads = 2
+  Before sort: the number 7 occurs 1000511 times in the list.
+  Sorting list with length 100000000 took  11.972 wall seconds.     1.68x faster
+  After sort : the number 7 occurs 1000511 times in the list.
+  OK, list is sorted!
+
+
+
+8 nThreads
+
+  N = 5000000
+  nThreads = 8
+  Before sort: the number 7 occurs 50019 times in the list.
+  Sorting list with length 5000000 took   0.232 wall seconds.      4.01x faster
+  After sort : the number 7 occurs 50019 times in the list.
+  OK, list is sorted!
+
+  N = 100000000
+  nThreads = 8
+  Before sort: the number 7 occurs 1000511 times in the list.
+  Sorting list with length 100000000 took   3.629 wall seconds.     5.56x faster
+  After sort : the number 7 occurs 1000511 times in the list.
+  OK, list is sorted!
+
+
+
+
+
+##################### Running merge sort with nThreads and 1 malloc call #####################

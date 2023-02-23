@@ -1,7 +1,7 @@
 CC = gcc
 LD = gcc
-CFLAGS = -O3 -Wall -Werror
-LDFLAGS = 
+CFLAGS = -O3 -Wall -Werror -fopenmp
+LDFLAGS = -fopenmp
 RM = /bin/rm -f
 OBJS = main.o sort_funcs.o
 EXECUTABLE = sort_test
@@ -15,7 +15,7 @@ sort_funcs.o: sort_funcs.h sort_funcs.c
 	$(CC) $(CFLAGS) -c sort_funcs.c
 
 main.o: main.c sort_funcs.h
-	$(CC) $(CFLAGS) -c main.c 
+	$(CC) $(CFLAGS) -c main.c  
 
 clean:
 	$(RM) $(EXECUTABLE) $(OBJS)
