@@ -1,0 +1,45 @@
+##################### RUNNING THE CODE AS IS #####################
+
+gcc -fopenmp -o reduce reduce.c
+time ./reduce 2
+
+
+1 thread
+    Global sum is: 499999500000.000000
+
+    real    0m1,762s
+    user    0m1,756s
+    sys     0m0,007s
+
+2 threads  
+    Global sum is: 499999500000.000000
+
+    real    0m0,885s   1.97x faster
+    user    0m1,744s
+    sys     0m0,007s
+
+4 threads  
+    Global sum is: 499999500000.000000
+
+    real    0m0,461s   3.86x faster
+    user    0m1,781s
+    sys     0m0,005s
+
+8 threads  
+    Global sum is: 499999500000.000000
+
+    real    0m0,250s  7.36x faster
+    user    0m1,841s
+    sys     0m0,015s
+
+
+
+
+##################### ADD REDUCTION CLAUSE AND USE ONLY ONE LINE OF #PRAGMA #####################
+
+8 threads   
+    Global sum is: 499999500000.000000
+
+    real    0m0,252s
+    user    0m1,857s
+    sys     0m0,007s

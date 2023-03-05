@@ -1,0 +1,80 @@
+#################### RUNNING THE CODE AS IS ####################
+
+gcc -fopenmp -o loop loop.c
+time ./loop 2
+
+
+What does it do?
+    Create one array where each element is a double and correspond to index
+    Copy result to other array in a slow way
+
+
+1 thread
+    Time taken: 11.489381 sec
+    sum = 12497500.000000
+
+    real    0m11,498s
+    user    0m11,496s
+    sys     0m0,003s
+
+
+
+2 threads
+    Time taken: 8.618298 sec
+    sum = 12497500.000000
+
+    real    0m8,627s          1.33x faster
+    user    0m11,513s
+    sys     0m0,001s
+
+
+
+8 threads
+    Time taken: 2.702525 sec
+    sum = 12497500.000000
+
+    real    0m2,712s           4.26x faster
+    user    0m11,558s
+    sys     0m0,039s
+
+
+I get the same result for any number of threads and each time it is run.
+I get speed up but not close to 1/N
+
+
+
+
+
+#################### RUNNING THE CODE WITH SCHEDULING ####################
+
+
+Static scheduling with 8 threads
+    Time taken: 2.702979 sec
+    sum = 12497500.000000
+
+    real    0m2,713s         4.27x faster
+    user    0m11,593s
+    sys     0m0,003s
+
+
+Dynamic scheduling with 8 threads
+    Time taken: 1.455734 sec
+    sum = 12497500.000000
+
+    real    0m1,465s         7.91x faster
+    user    0m11,590s
+    sys     0m0,007s
+
+
+Guided scheduling with 8 threads
+    Time taken: 1.464659 sec
+    sum = 12497500.000000
+
+    real    0m1,475s        7.89x faster
+    user    0m11,645s
+    sys     0m0,010s
+
+
+
+Guiding and dynamic scheduling give a low better performance than no scheduling or static.
+Almost 1/N time reduction.

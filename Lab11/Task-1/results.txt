@@ -1,0 +1,76 @@
+##################### PREDICT OUTPUT #####################
+
+a is a private variable that each thread has a copy of, on the stack
+b is shared and accesible by all threads
+
+echo $OMP_NUM_THREADS
+
+
+Each thread should print:
+    a=120 b=20
+
+
+
+
+
+##################### RUNNING CODE AS IS #####################
+
+gcc -fopenmp -o datasharing datasharing.c
+
+
+a= 20 b= 20
+a= 20 b= 20
+a= 20 b= 20
+a= 20 b= 20
+a= 20 b= 20
+a= 20 b= 20
+a= 20 b= 20
+a= 32695 b= 20
+a= 20 b= 20
+a= 20 b= 20
+a= 20 b= 20
+a= 20 b= 20
+a= 20 b= 20
+a= 20 b= 20
+a= 20 b= 20
+a= 20 b= 20
+
+
+a is uninitialized. can be zero can also be something else.
+
+
+
+##################### CHANGING TO FIRSTPRIVATE GIVES PREDICTABLE OUTPUT #####################
+
+
+a= 120 b= 20
+a= 120 b= 20
+a= 120 b= 20
+a= 120 b= 20
+a= 120 b= 20
+a= 120 b= 20
+a= 120 b= 20
+a= 120 b= 20
+a= 120 b= 20
+a= 120 b= 20
+a= 120 b= 20
+a= 120 b= 20
+a= 120 b= 20
+a= 120 b= 20
+a= 120 b= 20
+a= 120 b= 20
+
+
+
+
+
+
+##################### LASTPRIVATE CLAUSE #####################
+
+
+Firstprivate allows for variables initialized before the parallelization to be brought into each thread
+
+Lastprivate allows for modifications inside parallel region to be brought back outside.
+This is useful when you want to access the value from a value modified in a thread after the thread has finished.
+
+Lastprivate requires for loop?

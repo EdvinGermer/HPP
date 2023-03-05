@@ -1,0 +1,21 @@
+#################### valgrind when compiling with no flags ####################
+
+gcc -o smallcode smallcode.c
+
+
+All heap blocks were freed -- no leaks are possible
+
+
+
+
+
+#################### valgrind when compiling with -openmp flag ####################
+
+gcc -fopenmp -o smallcode smallcode.c
+
+LEAK SUMMARY:
+==2178306==    definitely lost: 0 bytes in 0 blocks              THIS IS THE MOST IMPORTANT LINE
+==2178306==    indirectly lost: 0 bytes in 0 blocks
+==2178306==      possibly lost: 4,320 bytes in 15 blocks
+==2178306==    still reachable: 5,264 bytes in 4 blocks
+==2178306==         suppressed: 0 bytes in 0 blocks

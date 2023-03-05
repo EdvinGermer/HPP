@@ -1,0 +1,58 @@
+#################### RUNNING THE CODE AS IS ####################
+
+time ./program N M nThreads
+
+Case A: N=80000 M=80
+    time ./program 80000 80 1
+        finalSum = 2515060480.000000
+        real    0m6,639s
+        user    0m6,612s
+        sys     0m0,027s
+
+    time ./program 80000 80 4
+        finalSum = 2515060480.000000
+        real    0m1,961s               3.65x faster than current user,    3,3x faster than 1 thread
+        user    0m7,173s
+        sys     0m0,032s
+
+
+Case B: N=800 M=8000
+    time ./program 800 8000 1
+        finalSum = 2551640320.000000
+        real    0m7,816s
+        user    0m7,793s
+        sys     0m0,023s
+
+    time ./program 800 8000 4
+        finalSum = 2551640320.000000
+        real    0m2,403s               3.71x faster than current user,    3,24x faster than 1 thread
+        user    0m8,929s
+        sys     0m0,045s
+
+
+Case C: N=8 M=800000
+    time ./program 8 800000 1
+        finalSum = 536870912.000000
+        real    0m5,506s
+        user    0m5,494s
+        sys     0m0,012s
+
+    time ./program 8 800000 4
+        finalSum = 536870912.000000
+        real    0m2,334s               3.66x faster than current user,    2.35x faster than 1 thread
+        user    0m8,554s        User time becomes longer when using 4 threads
+        sys     0m0,072s
+
+
+
+When comparing real and user we get almost 1/N. But user time increases when we increase the number of threads
+
+
+Lower number N gives more interference between threads so the speed up does not approach 1/N time 
+
+N determines size of C. If C is small and fits in cache different threads want to access memory
+that is very close so it is in the same cache line. We get falhse sharing.
+
+
+
+

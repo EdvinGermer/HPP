@@ -1,0 +1,91 @@
+##################### What does the code do? #####################
+
+From the reading list:
+    The sections construct contains a set of structured blocks
+    that are to be distributed among and executed by the
+    encountering team of threads.
+
+Create 2 threads
+We have two sections, so each thread takes on section
+One thread executes funcA
+The other thread executes funcB
+
+
+
+
+##################### RUNNING THE CODE AS IS #####################
+
+gcc -fopenmp -o ompsections ompsections.c
+
+funcB() result: x = 2.718282
+funcA() result: x = 1.648721
+
+real    0m2,532s
+user    0m5,046s
+sys     0m0,001s
+
+
+real time is half of user time, so each thread takes on func
+
+
+
+
+
+##################### RUNNING THE CODE WITH 1 THREAD #####################
+
+funcA() result: x = 1.648721
+funcB() result: x = 2.718282
+
+real    0m5,030s
+user    0m5,025s
+sys     0m0,004s
+
+
+
+
+##################### RUNNING THE CODE WITH 4 THREADS #####################
+
+funcB() result: x = 2.718282
+funcA() result: x = 1.648721
+
+real    0m2,524s
+user    0m5,038s
+sys     0m0,004s
+
+
+
+More than 2 threads is redundant and it is not faster. 2 threads remain idle.
+
+
+
+
+##################### ADDING FUNC C AND RUNNING WITH 2 THREADS #####################
+
+
+funcB() result: x = 2.718282
+funcA() result: x = 1.648721
+funcC() result: x = 6.722534
+
+real    0m5,025s
+user    0m7,540s
+sys     0m0,001s
+
+
+funcB and funcA is run in parallel and finishes quickly. Then 1 thread goes into funcC
+
+
+
+
+
+##################### RUNNING FUNC C WITH 3 THREADS #####################
+
+funcC() result: x = 6.722534
+funcB() result: x = 2.718282
+funcA() result: x = 1.648721
+
+real    0m2,524s
+user    0m7,536s
+sys     0m0,019s
+
+
+As expected real time is same as before and each function call is split to each thread

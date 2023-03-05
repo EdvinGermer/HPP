@@ -21,16 +21,30 @@ int main(int argc, char *argv[]) {
     }
     int N = atoi(argv[1]);
     int M=100,i;
+    int nThreads = 8;
     double result[M];
     double finalresult=0;
     double time;
     
+
     time = omp_get_wtime();
-    for (int i=0;i<M;i++){
-        f(N,i,&result[i]);
+    #pragma omp parallel num_threads(nThreads)
+    {
+        #pragma omp single
+        {
+            for (int i=0;i<M;i++)
+                #pragma omp task
+                {
+                    f(N,i,&result[i]);
+                }
+        }
     }
+
     time = omp_get_wtime()-time;
  
+
+
+
     for (int i=0;i<M;i++)
         finalresult+=result[i];
     

@@ -1,0 +1,103 @@
+ ##################### INTRO #####################
+
+ Task are used when threads encounter heavy work and creates a task for that work.
+ Other threads can then be assigned that work.
+ When one thread is done it is ready for a new task.
+
+
+
+
+  ##################### RUNNING TASK_EXAMPLE CODE AS IS #####################
+
+  gcc -fopenmp -o task_example_code task_example_code.c
+
+  N = 500:
+    Time = 5.706103 
+    finalSum = 23419161562.499748
+
+
+
+
+##################### RUNNING TASK-EXAMPLE CODE WITH TASK DIRECTIVES #####################
+
+4 threads:
+    N = 500:
+        Time = 1.481860                     3.85x faster
+        finalSum = 23419161562.499748    
+    
+
+8 threads:
+    N = 500:
+        Time = 0.809833                     7.04x faster
+        finalSum = 23419161562.499748
+
+
+
+
+##################### MERGE SORT WITH TASK DIRECTIVES #####################
+
+
+
+
+
+
+
+
+
+
+
+##################### COMPARISON WITH PTHREADS AND OPENMP #####################
+
+
+SERIAL:
+    N = 100.000.000
+    Before sort: the number 7 occurs 1000511 times in the list.
+    Sorting list with length 100000000 took  20.187 wall seconds.
+    After sort : the number 7 occurs 1000511 times in the list.
+    OK, list is sorted!
+
+
+
+PTHREADS:
+    N = 100000000
+    nThreads = 2
+    Before sort: the number 7 occurs 1000511 times in the list.
+    Sorting list with length 100000000 took  11.972 wall seconds.     1.68x faster
+    After sort : the number 7 occurs 1000511 times in the list.
+    OK, list is sorted!
+
+    N = 100000000
+    nThreads = 8
+    Before sort: the number 7 occurs 1000511 times in the list.
+    Sorting list with length 100000000 took   3.629 wall seconds.     5.56x faster
+    After sort : the number 7 occurs 1000511 times in the list.
+    OK, list is sorted!
+
+
+
+OPENMP WITH TASKS:
+    N = 100000000
+    nThreads = 2
+    Before sort: the number 7 occurs 1000511 times in the list.
+    Sorting list with length 100000000 took  10.983 wall seconds.     1.83x faster
+    After sort : the number 7 occurs 1000511 times in the list.
+    OK, list is sorted!
+
+    N = 100000000
+    nThreads = 8
+    Before sort: the number 7 occurs 1000511 times in the list.
+    Sorting list with length 100000000 took   3.535 wall seconds.      5.71x faster
+    After sort : the number 7 occurs 1000511 times in the list.
+    OK, list is sorted!
+
+
+
+
+
+
+OpenMP is slightly faster than PTHREADS. But could just be random.
+Seems to be equally fast.
+
+
+
+

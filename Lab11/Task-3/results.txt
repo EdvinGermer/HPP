@@ -1,0 +1,97 @@
+##################### RUNNING THE CODE AS IS WITHOUT FOPENMP #####################
+
+gcc -o simple-loop simple-loop.c
+
+time ./simple-loop
+
+        sum = 19999.749173
+
+        real    0m5,012s
+        user    0m5,005s
+        sys     0m0,007s
+
+
+
+
+
+##################### RUNNING THE CODE AS IS WITH FOPENMP #####################
+
+gcc -fopenmp -o simple-loop simple-loop.c
+
+1 thread
+    sum = 19999.749173
+
+    real    0m5,445s
+    user    0m5,439s
+    sys     0m0,006s
+
+
+2 threads
+    sum = 19999.749173
+
+    real    0m2,524s   2x faster
+    user    0m5,037s
+    sys     0m0,003s
+
+
+4 threads
+    sum = 19999.749173
+
+    real    0m1,274s   3.96x faster
+    user    0m5,054s
+    sys     0m0,001s
+
+
+8 threads   
+    sum = 19999.749173
+
+    real    0m0,649s    7.876x faster
+    user    0m5,112s
+    sys     0m0,007s
+
+
+Perfectly parallelizable operations give almost perfect scaling with increased thread count
+
+
+
+
+
+
+
+##################### REWRITE simple-lopp TO ONE OPENMP-DIRECTIVE #####################
+
+
+Works fine!
+
+with 8 threads
+
+    sum = 19999.749173
+
+    real    0m0,652s
+    user    0m5,114s
+    sys     0m0,006s
+
+
+
+##################### RUNNING other-loop #####################
+
+gcc -fopenmp -o other-loop other-loop.c
+
+Running as is
+    sum = 83771.675509
+
+    real    0m5,025s
+    user    0m5,020s
+    sys     0m0,006s
+
+
+With 8 threads 
+    sum = 70188.869642
+    sum = 69271.362701
+    sum = 66524.869554
+
+    real    0m0,647s      ROUGHLY 8 TIMES FASTER BUT GET THE WRONG AND DIFFERENT RESULTS EACH TIME
+    user    0m5,091s
+    sys     0m0,006s
+
+

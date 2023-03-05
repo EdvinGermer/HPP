@@ -19,13 +19,21 @@ void funcB() {
   printf("funcB() result: x = %f\n", x);
 }
 
+void funcC() {
+  long int i;
+  double x = 1.5;
+  for(i = 0; i < N; i++)
+    x *= 1.000000003;
+  printf("funcC() result: x = %f\n", x);
+}
+
 int main(int argc, char *argv[]) {
 
-#pragma omp parallel num_threads(2)
+#pragma omp parallel num_threads(3)     // Parallel region with 2 threads
   {
 
-#pragma omp sections
-    {
+#pragma omp sections   // Begin sections
+    { 
 
 #pragma omp section
       {
@@ -35,6 +43,11 @@ int main(int argc, char *argv[]) {
 #pragma omp section
       {
 	funcB();
+      }
+
+#pragma omp section
+      {
+	funcC();
       }
 
     } /* end of omp sections block */
